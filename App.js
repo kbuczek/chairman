@@ -6,7 +6,8 @@ import {
   Nunito_700Bold,
 } from "@expo-google-fonts/nunito";
 import Home from "./screens/home";
-import AppNavigator from "./routes/AppNavigator";
+import homeStackNav from "./routes/homeStackNav";
+import Drawer from "./routes/drawer";
 
 export default function App() {
   let [fontsLoaded] = useFonts({
@@ -18,5 +19,5 @@ export default function App() {
     return <AppLoading />;
   }
 
-  return <AppNavigator />;
+  return <Drawer />;
 }
