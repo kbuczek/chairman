@@ -6,33 +6,17 @@ import {
   Button,
   FlatList,
   TouchableOpacity,
+  Modal,
 } from "react-native";
 import { globalStyles } from "../styles/global";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
+import { MaterialIcons } from "@expo/vector-icons";
 import Card from "../shared/card";
+import Data from "../data/homeData";
+import { set } from "react-native-reanimated";
 
 export default function Home({ navigation }) {
-  const [reviews, setReviews] = useState([
-    {
-      title: "Zelda, Breath of Fresh Air",
-      rating: 5,
-      body: "lorem ipsum",
-      key: "1",
-    },
-    {
-      title: "Gotta Catch Them All (again)",
-      rating: 4,
-      body: "lorem ipsum",
-      key: "2",
-    },
-    {
-      title: 'Not So "Final" Fantasy',
-      rating: 3,
-      body: "lorem ipsum",
-      key: "3",
-    },
-  ]);
+  const [reviews, setReviews] = useState(Data);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <View style={globalStyles.container}>
@@ -41,6 +25,26 @@ export default function Home({ navigation }) {
         title="Go to Review Details"
         onPress={() => navigation.navigate("ReviewDetails")}
       /> */}
+
+      <Modal visible={isModalOpen} animationType="slide">
+        <View style={styles.modalContent}>
+          <MaterialIcons
+            name="close"
+            size={24}
+            style={{ ...styles.modalToggle, ...styles.modalClose }}
+            onPress={() => setIsModalOpen(false)}
+          />
+          <Text>Hello from Modal</Text>
+        </View>
+      </Modal>
+
+      <MaterialIcons
+        name="add"
+        size={24}
+        style={styles.modalToggle}
+        onPress={() => setIsModalOpen(true)}
+      />
+
       <FlatList
         data={reviews}
         renderItem={({ item }) => (
@@ -57,4 +61,15 @@ export default function Home({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  modalToggle: {
+    marginBottom: 10,
+    borderWidth: 2,
+    borderColor: "#dcdcdc",
+    borderRadius: 10,
+    padding: 10,
+    alignSelf: "center",
+  },
+  modalClose: { marginTop: 20, marginBottom: 0 },
+  modalContent: { flex: 1 },
+});
