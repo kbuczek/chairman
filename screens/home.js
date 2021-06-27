@@ -10,6 +10,7 @@ import {
 import { globalStyles } from "../styles/global";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import Card from "../shared/card";
 
 export default function Home({ navigation }) {
   const [reviews, setReviews] = useState([
@@ -46,7 +47,9 @@ export default function Home({ navigation }) {
           <TouchableOpacity
             onPress={() => navigation.navigate("ReviewDetails", item)}
           >
-            <Text style={globalStyles.titleText}>{item.title}</Text>
+            <Card>
+              <Text style={globalStyles.titleText}>{item.title}</Text>
+            </Card>
           </TouchableOpacity>
         )}
       />
