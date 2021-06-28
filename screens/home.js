@@ -83,5 +83,5 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   modalClose: { marginTop: 20, marginBottom: 0 },
-  modalContent: { flex: 1 },
+  modalContent: { flex: 1, padding: 15 },
 });
