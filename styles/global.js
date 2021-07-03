@@ -3,7 +3,8 @@ import { StyleSheet } from "react-native";
 export const globalStyles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 30,
+    backgroundColor: "#fff",
+    padding: 20,
   },
   titleText: {
     fontFamily: "Nunito_700Bold",
@@ -20,6 +21,14 @@ export const globalStyles = StyleSheet.create({
     padding: 10,
     fontSize: 18,
     borderRadius: 6,
+  },
+  inputSmall: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    padding: 10,
+    fontSize: 18,
+    borderRadius: 6,
+    maxWidth: 10,
   },
   errorText: {
     color: "red",
