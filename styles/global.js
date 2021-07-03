@@ -5,6 +5,7 @@ export const globalStyles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     padding: 20,
+    paddingBottom: 0,
   },
   titleText: {
     fontFamily: "Nunito_700Bold",
@@ -28,7 +29,7 @@ export const globalStyles = StyleSheet.create({
     padding: 10,
     fontSize: 18,
     borderRadius: 6,
-    maxWidth: 10,
+    width: "23%",
   },
   errorText: {
     color: "red",
