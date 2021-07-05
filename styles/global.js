@@ -2,6 +2,7 @@ import { StyleSheet } from "react-native";
 
 export const globalStyles = StyleSheet.create({
   container: {
+    fontFamily: "Nunito_700Bold",
     flex: 1,
     backgroundColor: "#fff",
     padding: 20,

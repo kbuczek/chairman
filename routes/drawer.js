@@ -12,7 +12,7 @@ export default DrawerNav = () => {
     <NavigationContainer>
       <Drawer.Navigator initialRouteName="Harmonogram">
         <Drawer.Screen name="Harmonogram" component={ScheduleStackNav} />
-        <Drawer.Screen name="Home" component={HomeStackNav} />
+        {/* <Drawer.Screen name="Home" component={HomeStackNav} /> */}
         <Drawer.Screen name="About" component={AboutStackNav} />
       </Drawer.Navigator>
     </NavigationContainer>

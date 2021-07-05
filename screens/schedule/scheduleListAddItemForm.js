@@ -177,6 +177,10 @@ export default function ScheduleListAddItemForm({ addScheduleListItem }) {
               {props.touched.notes && props.errors.notes}
             </Text>
 
+            <Text>
+              Dodaj alert w minutach przed końcem wykładu (np. czas na pytania):
+            </Text>
+
             <Button title="Dodaj" color="green" onPress={props.handleSubmit} />
             {/* <CustomButton text="Submit" onPress={props.handleSubmit} /> */}
           </View>

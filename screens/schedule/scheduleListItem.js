@@ -1,6 +1,7 @@
 import React from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import CurrentTimer from "../../shared/currentTimer";
 
 export default function ScheduleListItem({ item, pressHandler }) {
   return (
@@ -12,6 +13,14 @@ export default function ScheduleListItem({ item, pressHandler }) {
         </Text>
         <Text style={styles.itemText}>{item.title}</Text>
         {/* <MaterialIcons name="delete" size={18} color="#333" /> */}
+        <CurrentTimer
+          day={item.day}
+          startingHour={item.startingHour}
+          startingMinute={item.startingMinute}
+          endingHour={item.endingHour}
+          endingMinute={item.endingMinute}
+          text={false}
+        />
       </View>
     </TouchableOpacity>
   );
