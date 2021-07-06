@@ -57,6 +57,15 @@ const scheduleSchema = yup.object({
       }
     ),
   notes: yup.string().max(200),
+  // alert: yup
+  //   .number()
+  //   .test(
+  //     "is-num-0-30",
+  //     "Godzina musi mieścić się w przedziale od 0 do 30",
+  //     (val) => {
+  //       return val >= 0 && val <= 30;
+  //     }
+  //   ),
 });
 
 export default function ScheduleListAddItemForm({ addScheduleListItem }) {
@@ -180,6 +189,16 @@ export default function ScheduleListAddItemForm({ addScheduleListItem }) {
             <Text>
               Dodaj alert w minutach przed końcem wykładu (np. czas na pytania):
             </Text>
+            {/* <TextInput
+              style={globalStyles.input}
+              placeholder="minuty przed końcem wykładu"
+              onChangeText={props.handleChange("alert")}
+              value={props.values.alert}
+              onBlur={props.handleBlur("alert")}
+            />
+            <Text style={globalStyles.errorText}>
+              {props.touched.alert && props.errors.alert}
+            </Text> */}
 
             <Button title="Dodaj" color="green" onPress={props.handleSubmit} />
             {/* <CustomButton text="Submit" onPress={props.handleSubmit} /> */}

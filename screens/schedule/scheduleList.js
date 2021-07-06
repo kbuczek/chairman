@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -20,7 +20,30 @@ import Data from "../../data/scheduleData";
 
 export default function ScheduleList({ navigation }) {
   const [scheduleData, setScheduleData] = useState(Data);
+  const [days, setDays] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  function uniq(a) {
+    setDays(Array.from(new Set(a)));
+  }
+
+  useEffect(() => {
+    scheduleData.map(({ day }) => {
+      // console.log(days.includes(day));
+      // if (days.includes(day)) {
+      setDays((oldArray) => [...oldArray, day]);
+      // setDays(uniq(days));
+      // }
+    });
+
+    // uniq(days);
+
+    return () => setDays([]);
+  }, [scheduleData]);
+
+  // useEffect(() => {
+  //   uniq(days);
+  // }, [scheduleData]);
 
   const pressHandlerDeleteItem = (key) => {
     console.log("DELETE");
@@ -70,6 +93,14 @@ export default function ScheduleList({ navigation }) {
         </TouchableOpacity>
 
         <View style={styles.content}>
+          {/* {console.log(days)} */}
+          {days.map((item) => {
+            return (
+              <View key={Math.random() * 1000}>
+                <Text style={styles.date}>{item}</Text>
+              </View>
+            );
+          })}
           <View style={styles.list}>
             <FlatList
               data={scheduleData}
@@ -130,4 +161,7 @@ const styles = StyleSheet.create({
   },
   modalClose: { marginTop: 20, marginBottom: 0 },
   modalContent: { flex: 1, padding: 15 },
+  date: {
+    fontSize: 24,
+  },
 });

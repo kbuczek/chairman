@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Alert } from "react-native";
 import { globalStyles } from "../styles/global";
+import AlertFunction from ".//alertFunction";
 
 export default function CurrentTimer({
+  title,
   day,
   startingHour,
   startingMinute,
@@ -22,7 +24,7 @@ export default function CurrentTimer({
       //   setSeconds(new Date().getSeconds());
       setMinutes(new Date().getMinutes());
       setHours(new Date().getHours());
-    }, 1000);
+    }, 60000);
 
     // let minTimer = setInterval(() => {
     //   setMinutes(new Date().getMinutes());
@@ -42,45 +44,6 @@ export default function CurrentTimer({
       "-" +
       date.getFullYear();
 
-    // if (todayDate === day) {
-    //   if (startingHour - hours === 1) {
-    //     // console.log(startingHour);
-    //     // console.log(hours);
-    //     // console.log(startingHour - hours);
-    //     return (
-    //       <>
-    //         {text && (
-    //           <Text style={styles.starting}>Do rozpoczęcia pozostało:</Text>
-    //         )}
-    //         <Text>
-    //           {displayFrontZeros(startingHour - (hours + 1))}:
-    //           {startingMinute - minutes}
-    //         </Text>
-    //       </>
-    //     );
-    //   } else if (endingHour - hours <= endingHour - startingHour) {
-    //     return (
-    //       <>
-    //         {text && (
-    //           <Text style={styles.ending}>Do zakończenia pozostało:</Text>
-    //         )}
-    //         <Text style={styles.ending}>
-    //           {endingHour - hours}:{endingMinute - minutes}
-    //         </Text>
-    //       </>
-    //     );
-    //   } else if (endingHour - hour > 1) {
-    //     return (
-    //       <>
-    //         {text && <Text style={styles.overtime}>Przekroczony czas:</Text>}
-    //         <Text style={styles.ending}>
-    //           {endingHour - hours}:{endingMinute - minutes}
-    //         </Text>
-    //       </>
-    //     );
-    //   }
-    // }
-
     if (todayDate === day) {
       let startingTimeMinutes =
         parseInt(startingHour) * 60 + parseInt(startingMinute);
@@ -96,6 +59,10 @@ export default function CurrentTimer({
       if (toStartMinutesLeft <= 90 && toStartMinutesLeft >= 0) {
         let thisHour = Math.floor(toStartMinutesLeft / 60);
         let thisMinute = toStartMinutesLeft - thisHour * 60;
+        if (thisHour === 0 && thisMinute === 0) {
+          console.log("Alert 1");
+          AlertFunction(1, title);
+        }
         return (
           <Text style={styles.starting}>
             {text && "Do rozpoczęcia pozostało:"}+ {thisHour} godzin{", "}
@@ -105,6 +72,10 @@ export default function CurrentTimer({
       } else if (toEndMinutesLeft <= 90 && toEndMinutesLeft >= 0) {
         let thisHour = Math.floor(toEndMinutesLeft / 60);
         let thisMinute = toEndMinutesLeft - thisHour * 60;
+        if (thisHour === 0 && thisMinute === 0) {
+          console.log("Alert 2");
+          AlertFunction(2, title);
+        }
         return (
           <Text style={styles.ending}>
             {text && "Do zakończenia pozostało:"} {thisHour} godzin{", "}
@@ -124,15 +95,7 @@ export default function CurrentTimer({
     }
   };
 
-  return (
-    <View style={globalStyles.container}>
-      {/* <Text>
-        {displayFrontZeros(hours)}:{displayFrontZeros(minutes)}:
-        {displayFrontZeros(seconds)} */}
-      {checkTime()}
-      {/* </Text> */}
-    </View>
-  );
+  return <View>{checkTime()}</View>;
 }
 
 const styles = StyleSheet.create({
