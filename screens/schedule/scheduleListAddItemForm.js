@@ -189,14 +189,14 @@ export default function ScheduleListAddItemForm({ addScheduleListItem }) {
             <Text>
               Dodaj alert w minutach przed końcem wykładu (np. czas na pytania):
             </Text>
-            {/* <TextInput
+            <TextInput
               style={globalStyles.input}
               placeholder="minuty przed końcem wykładu"
               onChangeText={props.handleChange("alert")}
               value={props.values.alert}
               onBlur={props.handleBlur("alert")}
             />
-            <Text style={globalStyles.errorText}>
+            {/* <Text style={globalStyles.errorText}>
               {props.touched.alert && props.errors.alert}
             </Text> */}
 

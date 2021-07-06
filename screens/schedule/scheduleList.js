@@ -94,10 +94,23 @@ export default function ScheduleList({ navigation }) {
 
         <View style={styles.content}>
           {/* {console.log(days)} */}
-          {days.map((item) => {
+          {days.map((prop) => {
             return (
               <View key={Math.random() * 1000}>
-                <Text style={styles.date}>{item}</Text>
+                <Text style={styles.date}>{prop}</Text>
+                {/* {scheduleData.map((item) => {
+                    console.log(item);
+                    return (
+                      <View key={item.key}>
+                        <ScheduleListItem
+                          item={item}
+                          pressHandler={() =>
+                            navigation.navigate("ListItemDetails", item)
+                          }
+                        />
+                      </View>
+                    );
+                  })} */}
               </View>
             );
           })}
@@ -162,6 +175,9 @@ const styles = StyleSheet.create({
   modalClose: { marginTop: 20, marginBottom: 0 },
   modalContent: { flex: 1, padding: 15 },
   date: {
+    // marginTop: 30,
+    marginBottom: 0,
+    paddingBottom: 0,
     fontSize: 24,
   },
 });
