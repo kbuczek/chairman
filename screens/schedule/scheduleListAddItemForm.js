@@ -1,24 +1,17 @@
 import React from "react";
-import {
-  StyleSheet,
-  Button,
-  TextInput,
-  View,
-  Text,
-  ScrollView,
-} from "react-native";
+import { StyleSheet, Button, TextInput, View, Text } from "react-native";
 import { globalStyles } from "../../styles/global";
+import RNDateTimePicker from "@react-native-community/datetimepicker";
 import { Formik } from "formik";
 import * as yup from "yup";
-// import CustomButton from "../shared/customButton";
 
 const scheduleSchema = yup.object({
+  room: yup.string().required().max(40),
   title: yup.string().required().max(40),
   person: yup.string().required().max(40),
   day: yup.string().required().max(40),
   startingHour: yup
     .number()
-    .required()
     .test(
       "is-num-0-24",
       "Godzina musi mieścić się w przedziale od 0 do 24",
@@ -28,7 +21,6 @@ const scheduleSchema = yup.object({
     ),
   startingMinute: yup
     .number()
-    .required()
     .test(
       "is-num-0-59",
       "Minuty muszą mieścić się w przedziale od 0 do 59",
@@ -38,7 +30,6 @@ const scheduleSchema = yup.object({
     ),
   endingHour: yup
     .number()
-    .required()
     .test(
       "is-num-0-24",
       "Godzina musi mieścić się w przedziale od 0 do 24",
@@ -48,7 +39,6 @@ const scheduleSchema = yup.object({
     ),
   endingMinute: yup
     .number()
-    .required()
     .test(
       "is-num-0-59",
       "Minuty muszą mieścić się w przedziale od 0 do 59",
@@ -57,22 +47,34 @@ const scheduleSchema = yup.object({
       }
     ),
   notes: yup.string().max(200),
-  // alert: yup
-  //   .number()
-  //   .test(
-  //     "is-num-0-30",
-  //     "Godzina musi mieścić się w przedziale od 0 do 30",
-  //     (val) => {
-  //       return val >= 0 && val <= 30;
-  //     }
-  //   ),
+  alert: yup
+    .number()
+    .test(
+      "is-num-0-30",
+      "Godzina musi mieścić się w przedziale od 0 do 30",
+      (val) => {
+        return val >= 0 && val <= 30;
+      }
+    ),
 });
 
 export default function ScheduleListAddItemForm({ addScheduleListItem }) {
   return (
     <View style={globalStyles.cointainer}>
+      <Text style={globalStyles.title}>Dodaj wykład</Text>
       <Formik
-        initialValues={{ title: "", person: "", notes: "" }}
+        initialValues={{
+          room: "",
+          title: "",
+          person: "",
+          day: "",
+          startingHour: 0,
+          startingMinute: 0,
+          endingHour: 0,
+          endingMinute: 0,
+          notes: "",
+          alert: 0,
+        }}
         validationSchema={scheduleSchema}
         onSubmit={(values, actions) => {
           actions.resetForm();
@@ -83,7 +85,17 @@ export default function ScheduleListAddItemForm({ addScheduleListItem }) {
           <View>
             <TextInput
               style={globalStyles.input}
-              placeholder="Tytuł wykładu"
+              placeholder="Sala*"
+              onChangeText={props.handleChange("room")}
+              value={props.values.room}
+              onBlur={props.handleBlur("room")}
+            />
+            <Text style={globalStyles.errorText}>
+              {props.touched.room && props.errors.room}
+            </Text>
+            <TextInput
+              style={globalStyles.input}
+              placeholder="Tytuł wykładu*"
               onChangeText={props.handleChange("title")}
               value={props.values.title}
               onBlur={props.handleBlur("title")}
@@ -91,10 +103,9 @@ export default function ScheduleListAddItemForm({ addScheduleListItem }) {
             <Text style={globalStyles.errorText}>
               {props.touched.title && props.errors.title}
             </Text>
-
             <TextInput
               style={globalStyles.input}
-              placeholder="Osoba prowadząca"
+              placeholder="Osoba prowadząca*"
               onChangeText={props.handleChange("person")}
               value={props.values.person}
               onBlur={props.handleBlur("person")}
@@ -102,20 +113,29 @@ export default function ScheduleListAddItemForm({ addScheduleListItem }) {
             <Text style={globalStyles.errorText}>
               {props.touched.person && props.errors.person}
             </Text>
-
-            <Text>Dzień wykładu:</Text>
+            <Text>Dzień wykładu*:</Text>
             <TextInput
               style={globalStyles.input}
-              placeholder="Wybierz dzień wykładu"
+              placeholder="DD-MM-YYYY"
               onChangeText={props.handleChange("day")}
               value={props.values.day}
               onBlur={props.handleBlur("day")}
             />
+            {/* <DatePicker
+              selected={new Date()}
+              value={props.values.day}
+              onChange={props.handleChange("day")} //only when value has changed
+            /> */}
+            {/* <RNDateTimePicker
+              mode="date"
+              value={props.values.day}
+              onChangeText={props.handleChange("day")}
+            /> */}
+
             <Text style={globalStyles.errorText}>
               {props.touched.day && props.errors.day}
             </Text>
-
-            <Text>Godzina rozpoczęcia:</Text>
+            <Text>Godzina rozpoczęcia*:</Text>
             <View style={{ flexDirection: "row" }}>
               <TextInput
                 style={globalStyles.inputSmall}
@@ -143,8 +163,7 @@ export default function ScheduleListAddItemForm({ addScheduleListItem }) {
                 {props.touched.startingMinute && props.errors.startingMinute}
               </Text>
             </View>
-
-            <Text style={{ marginTop: 10 }}>Godzina zakończenia:</Text>
+            <Text style={{ marginTop: 10 }}>Godzina zakończenia*:</Text>
             <View style={{ flexDirection: "row", marginBottom: 35 }}>
               <TextInput
                 style={globalStyles.inputSmall}
@@ -172,7 +191,6 @@ export default function ScheduleListAddItemForm({ addScheduleListItem }) {
                 {props.touched.endingMinute && props.errors.endingMinute}
               </Text>
             </View>
-
             <TextInput
               multiline
               minHeight={60}
@@ -185,7 +203,6 @@ export default function ScheduleListAddItemForm({ addScheduleListItem }) {
             <Text style={globalStyles.errorText}>
               {props.touched.notes && props.errors.notes}
             </Text>
-
             <Text>
               Dodaj alert w minutach przed końcem wykładu (np. czas na pytania):
             </Text>
@@ -196,12 +213,10 @@ export default function ScheduleListAddItemForm({ addScheduleListItem }) {
               value={props.values.alert}
               onBlur={props.handleBlur("alert")}
             />
-            {/* <Text style={globalStyles.errorText}>
+            <Text style={globalStyles.errorText}>
               {props.touched.alert && props.errors.alert}
-            </Text> */}
-
+            </Text>
             <Button title="Dodaj" color="green" onPress={props.handleSubmit} />
-            {/* <CustomButton text="Submit" onPress={props.handleSubmit} /> */}
           </View>
         )}
       </Formik>

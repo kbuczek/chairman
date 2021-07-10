@@ -38,4 +38,9 @@ export const globalStyles = StyleSheet.create({
     marginBottom: 10,
     marginTop: 6,
   },
+  title: {
+    fontSize: 25,
+    alignSelf: "center",
+    marginBottom: 15,
+  },
 });

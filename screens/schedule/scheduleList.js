@@ -27,23 +27,29 @@ export default function ScheduleList({ navigation }) {
     setDays(Array.from(new Set(a)));
   }
 
-  useEffect(() => {
-    scheduleData.map(({ day }) => {
-      // console.log(days.includes(day));
-      // if (days.includes(day)) {
-      setDays((oldArray) => [...oldArray, day]);
-      // setDays(uniq(days));
-      // }
-    });
-
-    // uniq(days);
-
-    return () => setDays([]);
-  }, [scheduleData]);
-
   // useEffect(() => {
-  //   uniq(days);
-  // }, [scheduleData]);
+  //   console.log("USEEFFECT");
+  //   setDays([]);
+  //   console.log(days);
+  //   scheduleData.map(({ day }) => {
+  //     console.log("DAY:", day);
+  //     console.log("DAYSSS: ", days);
+  //     if (days.includes(day)) {
+  //       console.log("doesn't include");
+  //       // setDays(uniq(days));
+  //     } else {
+  //       console.log("I'm IN BOIS");
+  //       setDays((oldArray) => [...oldArray, day]);
+  //       console.log("days after setDays:", days);
+  //     }
+  //   });
+
+  //   console.log(days);
+
+  // uniq(days);
+
+  // return () => setDays([]);
+  // }, []);
 
   const pressHandlerDeleteItem = (key) => {
     console.log("DELETE");
@@ -54,8 +60,13 @@ export default function ScheduleList({ navigation }) {
     });
   };
 
+  const pressHandlerExtendLecture = (key) => {
+    console.log("EXTEND", item);
+  };
+
   const addScheduleListItem = (item) => {
     item.key = Math.random().toString(); //find better way to generate key
+    console.log(item);
     setScheduleData((prevScheduleData) => {
       return [item, ...prevScheduleData];
     });
@@ -64,88 +75,79 @@ export default function ScheduleList({ navigation }) {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      {/* <ScrollView> */}
-      <View style={globalStyles.container}>
-        {/* Modal */}
-        <Modal visible={isModalOpen} animationType="slide">
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.modalContent}>
-              <MaterialIcons
-                name="close"
-                size={24}
-                style={{ ...styles.modalToggle, ...styles.modalClose }}
-                onPress={() => setIsModalOpen(false)}
-              />
-              <ScrollView>
-                <ScheduleListAddItemForm
-                  addScheduleListItem={addScheduleListItem}
+      <ScrollView>
+        <View style={globalStyles.container}>
+          {/* Modal */}
+          <Modal visible={isModalOpen} animationType="slide">
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+              <View style={styles.modalContent}>
+                <MaterialIcons
+                  name="close"
+                  size={24}
+                  style={styles.modalClose}
+                  onPress={() => setIsModalOpen(false)}
                 />
-              </ScrollView>
+                <ScrollView>
+                  <ScheduleListAddItemForm
+                    addScheduleListItem={addScheduleListItem}
+                  />
+                </ScrollView>
+              </View>
+            </TouchableWithoutFeedback>
+          </Modal>
+
+          <TouchableOpacity onPress={() => setIsModalOpen(true)}>
+            <View style={styles.modalToggle}>
+              <MaterialIcons name="add" size={24} />
+              <Text>Dodaj wykład</Text>
             </View>
-          </TouchableWithoutFeedback>
-        </Modal>
+          </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => setIsModalOpen(true)}>
-          <View style={styles.modalToggle}>
-            <MaterialIcons name="add" size={24} />
-            <Text>Dodaj wykład</Text>
-          </View>
-        </TouchableOpacity>
-
-        <View style={styles.content}>
-          {/* {console.log(days)} */}
-          {days.map((prop) => {
-            return (
-              <View key={Math.random() * 1000}>
-                <Text style={styles.date}>{prop}</Text>
-                {/* {scheduleData.map((item) => {
-                    console.log(item);
+          <View style={styles.content}>
+            {/* {days.map((prop) => {
+              return (
+                <View key={Math.random() * 1000}>
+                  <Text style={styles.date}>{prop}</Text>
+                  {scheduleData.map((item) => {
                     return (
                       <View key={item.key}>
                         <ScheduleListItem
                           item={item}
                           pressHandler={() =>
-                            navigation.navigate("ListItemDetails", item)
+                            navigation.navigate("ListItemDetails", {
+                              item,
+                              pressHandlerDeleteItem,
+                            })
                           }
                         />
                       </View>
                     );
-                  })} */}
-              </View>
-            );
-          })}
-          <View style={styles.list}>
-            <FlatList
-              data={scheduleData}
-              // dont have to add keyExtractor if you already have key property
-              renderItem={({ item }) => (
-                <ScheduleListItem
-                  item={item}
-                  pressHandler={() =>
-                    navigation.navigate("ListItemDetails", {
-                      item,
-                      pressHandlerDeleteItem,
-                    })
-                  }
-                />
-              )}
-            />
-            {/* {scheduleData.map((item) => {
-                return (
-                  <View key={item.key}>
-                    <ScheduleListItem
-                      item={item}
-                      pressHandler={() =>
-                        navigation.navigate("ListItemDetails", item)
-                      }
-                    />
-                  </View>
-                );
-              })} */}
+                  })}
+                </View>
+              );
+            })} */}
+            <View style={styles.list}>
+              <FlatList
+                data={scheduleData}
+                // dont have to add keyExtractor if you already have key property
+                renderItem={({ item }) => (
+                  <ScheduleListItem
+                    item={item}
+                    pressHandler={() =>
+                      navigation.navigate("ListItemDetails", {
+                        item,
+                        pressHandlerDeleteItem,
+                        pressHandlerExtendLecture,
+                        addScheduleListItem,
+                      })
+                    }
+                  />
+                )}
+              />
+            </View>
           </View>
         </View>
-      </View>
-      {/* </ScrollView> */}
+      </ScrollView>
     </TouchableWithoutFeedback>
   );
 }
@@ -172,10 +174,16 @@ const styles = StyleSheet.create({
     padding: 10,
     alignSelf: "center",
   },
-  modalClose: { marginTop: 20, marginBottom: 0 },
+  modalClose: {
+    flexDirection: "row",
+    marginTop: 20,
+    marginBottom: 10,
+    marginRight: 10,
+    alignSelf: "flex-end",
+  },
   modalContent: { flex: 1, padding: 15 },
   date: {
-    // marginTop: 30,
+    marginTop: 30,
     marginBottom: 0,
     paddingBottom: 0,
     fontSize: 24,
