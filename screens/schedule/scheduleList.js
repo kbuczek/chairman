@@ -17,6 +17,7 @@ import ScheduleListItem from "./scheduleListItem";
 import ScheduleListAddItemForm from "./scheduleListAddItemForm";
 import { globalStyles } from "../../styles/global";
 import Data from "../../data/scheduleData";
+import EmptyItem from "../../data/scheduleDataEmptyItem";
 
 export default function ScheduleList({ navigation }) {
   const [scheduleData, setScheduleData] = useState(Data);
@@ -90,6 +91,8 @@ export default function ScheduleList({ navigation }) {
                 <ScrollView>
                   <ScheduleListAddItemForm
                     addScheduleListItem={addScheduleListItem}
+                    item={EmptyItem}
+                    bigTitle={"Dodaj wykład"}
                   />
                 </ScrollView>
               </View>

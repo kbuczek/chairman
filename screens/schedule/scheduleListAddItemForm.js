@@ -58,22 +58,26 @@ const scheduleSchema = yup.object({
     ),
 });
 
-export default function ScheduleListAddItemForm({ addScheduleListItem }) {
+export default function ScheduleListAddItemForm({
+  addScheduleListItem,
+  item,
+  bigTitle,
+}) {
   return (
     <View style={globalStyles.cointainer}>
-      <Text style={globalStyles.title}>Dodaj wykład</Text>
+      <Text style={globalStyles.title}>{bigTitle}</Text>
       <Formik
         initialValues={{
-          room: "",
-          title: "",
-          person: "",
-          day: "",
-          startingHour: 0,
-          startingMinute: 0,
-          endingHour: 0,
-          endingMinute: 0,
-          notes: "",
-          alert: 0,
+          room: item.room,
+          title: item.title,
+          person: item.person,
+          day: item.day,
+          startingHour: item.startingHour.toString(),
+          startingMinute: item.startingMinute.toString(),
+          endingHour: item.endingHour.toString(),
+          endingMinute: item.endingMinute.toString(),
+          notes: item.notes,
+          alert: item.alert.toString(),
         }}
         validationSchema={scheduleSchema}
         onSubmit={(values, actions) => {

@@ -10,12 +10,12 @@ export default function CurrentTimer({
   startingMinute,
   endingHour,
   endingMinute,
+  alert,
   text,
 }) {
   //   const [seconds, setSeconds] = useState(new Date().getSeconds());
   const [minutes, setMinutes] = useState(new Date().getMinutes());
   const [hours, setHours] = useState(new Date().getHours());
-  //   const { key, title, person, day, notes } = route.params.item;
 
   const displayFrontZeros = (unit) => (unit < 10 ? `0${unit}` : unit);
 
@@ -24,7 +24,7 @@ export default function CurrentTimer({
       //   setSeconds(new Date().getSeconds());
       setMinutes(new Date().getMinutes());
       setHours(new Date().getHours());
-    }, 60000);
+    }, 55000);
 
     // let minTimer = setInterval(() => {
     //   setMinutes(new Date().getMinutes());
@@ -55,6 +55,13 @@ export default function CurrentTimer({
       let overtimeMinutes = currentTimeMinutes - endingTimeMinutes;
 
       let interval = endingTimeMinutes - startingTimeMinutes;
+
+      console.log(alert);
+      // console.log(toEndMinutesLeft);
+      if (parseInt(alert) < interval && parseInt(alert) === toEndMinutesLeft) {
+        console.log("Alert 3");
+        AlertFunction(3, title);
+      }
 
       if (toStartMinutesLeft <= 90 && toStartMinutesLeft >= 0) {
         let thisHour = Math.floor(toStartMinutesLeft / 60);

@@ -15,6 +15,13 @@ const alertFunction = (option, title) => {
       },
     ]);
   }
+  if (option === 3) {
+    Alert.alert("Twój alert przed końcem wykładu", title, [
+      {
+        text: "Ok",
+      },
+    ]);
+  }
 };
 
 export default alertFunction;

@@ -18,7 +18,6 @@ import EditButton from "../../shared/editButton";
 import { ScrollView } from "react-native-gesture-handler";
 import CurrentTimer from "../../shared/currentTimer";
 import ScheduleListAddItemForm from "./scheduleListAddItemForm";
-import ExtendLecture from "../../shared/extendLecture";
 
 export default function ListItemDetails({ route, navigation }) {
   const [dt, setDt] = useState(new Date().toLocaleString());
@@ -35,6 +34,7 @@ export default function ListItemDetails({ route, navigation }) {
     endingHour,
     endingMinute,
     notes,
+    alert,
   } = route.params.item;
 
   const pressHandler1 = () => {
@@ -91,6 +91,8 @@ export default function ListItemDetails({ route, navigation }) {
               <ScrollView>
                 <ScheduleListAddItemForm
                   addScheduleListItem={route.params.addScheduleListItem}
+                  item={route.params.item}
+                  bigTitle={"Edytuj Wykład"}
                 />
               </ScrollView>
             </View>
@@ -115,6 +117,7 @@ export default function ListItemDetails({ route, navigation }) {
             startingMinute={startingMinute}
             endingHour={endingHour}
             endingMinute={endingMinute}
+            alert={alert}
             text={true}
           />
         </Card>
