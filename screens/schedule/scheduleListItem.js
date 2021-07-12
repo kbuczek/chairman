@@ -34,7 +34,8 @@ export default function ScheduleListItem({ item, pressHandler }) {
 const styles = StyleSheet.create({
   item: {
     padding: 16,
-    marginTop: 16,
+    marginTop: 10,
+    marginBottom: 5,
     borderColor: "#bbb",
     borderWidth: 1,
     // borderStyle: "dashed",

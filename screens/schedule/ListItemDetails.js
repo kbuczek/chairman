@@ -59,7 +59,7 @@ export default function ListItemDetails({ route, navigation }) {
       <ScrollView>
         <Modal visible={isModalOpenExtendLecture} animationType="slide">
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.modalContent}>
+            <View style={globalStyles.modalContent}>
               <MaterialIcons
                 name="close"
                 size={24}
@@ -81,7 +81,7 @@ export default function ListItemDetails({ route, navigation }) {
 
         <Modal visible={isModalOpenEdit} animationType="slide">
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.modalContent}>
+            <View style={globalStyles.modalContent}>
               <MaterialIcons
                 name="close"
                 size={24}
@@ -93,6 +93,7 @@ export default function ListItemDetails({ route, navigation }) {
                   addScheduleListItem={route.params.addScheduleListItem}
                   item={route.params.item}
                   bigTitle={"Edytuj Wykład"}
+                  // pressHandlerDeleteItem={route.params.pressHandlerDeleteItem}
                 />
               </ScrollView>
             </View>

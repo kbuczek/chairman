@@ -62,6 +62,7 @@ export default function ScheduleListAddItemForm({
   addScheduleListItem,
   item,
   bigTitle,
+  // pressHandlerDeleteItem,
 }) {
   return (
     <View style={globalStyles.cointainer}>
@@ -82,6 +83,10 @@ export default function ScheduleListAddItemForm({
         validationSchema={scheduleSchema}
         onSubmit={(values, actions) => {
           actions.resetForm();
+          // console.log(item.key);
+          // if (item.key !== "") {
+          //   pressHandlerDeleteItem(item.key);
+          // }
           addScheduleListItem(values);
         }}
       >
@@ -120,10 +125,11 @@ export default function ScheduleListAddItemForm({
             <Text>Dzień wykładu*:</Text>
             <TextInput
               style={globalStyles.input}
-              placeholder="DD-MM-YYYY"
+              placeholder="DD-MM-RRRR"
               onChangeText={props.handleChange("day")}
               value={props.values.day}
               onBlur={props.handleBlur("day")}
+              keyboardType="numeric"
             />
             {/* <DatePicker
               selected={new Date()}
@@ -220,7 +226,11 @@ export default function ScheduleListAddItemForm({
             <Text style={globalStyles.errorText}>
               {props.touched.alert && props.errors.alert}
             </Text>
-            <Button title="Dodaj" color="green" onPress={props.handleSubmit} />
+            <Button
+              title={bigTitle}
+              color="green"
+              onPress={props.handleSubmit}
+            />
           </View>
         )}
       </Formik>

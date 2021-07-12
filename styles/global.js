@@ -43,4 +43,5 @@ export const globalStyles = StyleSheet.create({
     alignSelf: "center",
     marginBottom: 15,
   },
+  modalContent: { flex: 1, padding: 15 },
 });

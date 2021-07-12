@@ -58,7 +58,11 @@ export default function CurrentTimer({
 
       console.log(alert);
       // console.log(toEndMinutesLeft);
-      if (parseInt(alert) < interval && parseInt(alert) === toEndMinutesLeft) {
+      if (
+        parseInt(alert) &&
+        parseInt(alert) < interval &&
+        parseInt(alert) === toEndMinutesLeft
+      ) {
         console.log("Alert 3");
         AlertFunction(3, title);
       }

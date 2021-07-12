@@ -22,35 +22,25 @@ import EmptyItem from "../../data/scheduleDataEmptyItem";
 export default function ScheduleList({ navigation }) {
   const [scheduleData, setScheduleData] = useState(Data);
   const [days, setDays] = useState([]);
+  const [dayItems, setDayItems] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  function uniq(a) {
-    setDays(Array.from(new Set(a)));
-  }
-
   // useEffect(() => {
-  //   console.log("USEEFFECT");
-  //   setDays([]);
-  //   console.log(days);
-  //   scheduleData.map(({ day }) => {
-  //     console.log("DAY:", day);
-  //     console.log("DAYSSS: ", days);
-  //     if (days.includes(day)) {
-  //       console.log("doesn't include");
-  //       // setDays(uniq(days));
-  //     } else {
-  //       console.log("I'm IN BOIS");
-  //       setDays((oldArray) => [...oldArray, day]);
-  //       console.log("days after setDays:", days);
-  //     }
-  //   });
+  //   updateDays();
+  //   // return () => setDays([]);
+  // }, [scheduleData]);
 
-  //   console.log(days);
+  const updateDays = () => {
+    console.log("updateDays()", days);
 
-  // uniq(days);
-
-  // return () => setDays([]);
-  // }, []);
+    scheduleData.map(({ day }) => {
+      if (!days.includes(day)) {
+        setDays([...days, day]);
+      }
+    });
+    days.sort();
+    days.reverse();
+  };
 
   const pressHandlerDeleteItem = (key) => {
     console.log("DELETE");
@@ -66,7 +56,9 @@ export default function ScheduleList({ navigation }) {
   };
 
   const addScheduleListItem = (item) => {
-    item.key = Math.random().toString(); //find better way to generate key
+    if (!item.key) {
+      item.key = Math.random().toString(); //find better way to generate key
+    }
     console.log(item);
     setScheduleData((prevScheduleData) => {
       return [item, ...prevScheduleData];
@@ -93,6 +85,7 @@ export default function ScheduleList({ navigation }) {
                     addScheduleListItem={addScheduleListItem}
                     item={EmptyItem}
                     bigTitle={"Dodaj wykład"}
+                    // pressHandlerDeleteItem={pressHandlerDeleteItem}
                   />
                 </ScrollView>
               </View>
@@ -106,30 +99,35 @@ export default function ScheduleList({ navigation }) {
             </View>
           </TouchableOpacity>
 
+          {updateDays()}
           <View style={styles.content}>
-            {/* {days.map((prop) => {
+            {days.map((propDays) => {
               return (
                 <View key={Math.random() * 1000}>
-                  <Text style={styles.date}>{prop}</Text>
+                  <Text style={styles.date}>{propDays}</Text>
                   {scheduleData.map((item) => {
-                    return (
-                      <View key={item.key}>
-                        <ScheduleListItem
-                          item={item}
-                          pressHandler={() =>
-                            navigation.navigate("ListItemDetails", {
-                              item,
-                              pressHandlerDeleteItem,
-                            })
-                          }
-                        />
-                      </View>
-                    );
+                    if (item.day === propDays) {
+                      return (
+                        <View key={item.key}>
+                          <ScheduleListItem
+                            item={item}
+                            pressHandler={() =>
+                              navigation.navigate("ListItemDetails", {
+                                item,
+                                pressHandlerDeleteItem,
+                                pressHandlerExtendLecture,
+                                addScheduleListItem,
+                              })
+                            }
+                          />
+                        </View>
+                      );
+                    }
                   })}
                 </View>
               );
-            })} */}
-            <View style={styles.list}>
+            })}
+            {/* <View style={styles.list}>
               <FlatList
                 data={scheduleData}
                 // dont have to add keyExtractor if you already have key property
@@ -147,7 +145,7 @@ export default function ScheduleList({ navigation }) {
                   />
                 )}
               />
-            </View>
+            </View> */}
           </View>
         </View>
       </ScrollView>

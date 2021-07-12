@@ -9,5 +9,5 @@ export default EmptyItem = {
   endingHour: "",
   endingMinute: "",
   notes: "",
-  alert: "",
+  alert: "0",
 };
