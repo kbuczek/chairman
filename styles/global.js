@@ -4,9 +4,16 @@ export const globalStyles = StyleSheet.create({
   container: {
     fontFamily: "Nunito_700Bold",
     flex: 1,
-    backgroundColor: "#fff",
+    // backgroundColor: "#fff",
     padding: 20,
     paddingBottom: 0,
+  },
+  containerWithContent: {
+    fontFamily: "Nunito_700Bold",
+    flex: 1,
+    // backgroundColor: "#fff",
+    padding: 20,
+    paddingBottom: 50,
   },
   titleText: {
     fontFamily: "Nunito_700Bold",

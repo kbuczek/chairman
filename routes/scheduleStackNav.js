@@ -51,7 +51,7 @@ export default scheduleStackNav = ({ navigation }) => {
         options={{
           title: "Szczegóły wykładu",
           headerStyle: {
-            backgroundColor: "#bbb",
+            backgroundColor: "#b3b3b3",
           },
           headerTintColor: "#fff",
           headerTitleStyle: {

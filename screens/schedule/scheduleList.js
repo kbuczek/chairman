@@ -18,6 +18,7 @@ import ScheduleListAddItemForm from "./scheduleListAddItemForm";
 import { globalStyles } from "../../styles/global";
 import Data from "../../data/scheduleData";
 import EmptyItem from "../../data/scheduleDataEmptyItem";
+import convertDate from "../../shared/convertDate";
 
 export default function ScheduleList({ navigation }) {
   const [scheduleData, setScheduleData] = useState(Data);
@@ -38,12 +39,20 @@ export default function ScheduleList({ navigation }) {
         setDays([...days, day]);
       }
     });
-    days.sort();
-    days.reverse();
+
+    let indices = [6, 7, 8, 9, 3, 4, 0, 1];
+    days.sort((a, b) => {
+      // let r = 0;
+      return indices.find((i) => a.charCodeAt(i) - b.charCodeAt(i));
+      // return r;
+    });
+
+    console.log(days);
   };
 
   const pressHandlerDeleteItem = (key) => {
     console.log("DELETE");
+    //sprawdzic, czy dzien zawiera jeszcze jakies wyklady
     setScheduleData((previousScheduleData) => {
       return previousScheduleData.filter(
         (scheduleData) => scheduleData.key != key
@@ -80,14 +89,14 @@ export default function ScheduleList({ navigation }) {
                   style={styles.modalClose}
                   onPress={() => setIsModalOpen(false)}
                 />
-                <ScrollView>
-                  <ScheduleListAddItemForm
-                    addScheduleListItem={addScheduleListItem}
-                    item={EmptyItem}
-                    bigTitle={"Dodaj wykład"}
-                    // pressHandlerDeleteItem={pressHandlerDeleteItem}
-                  />
-                </ScrollView>
+                {/* <ScrollView> */}
+                <ScheduleListAddItemForm
+                  addScheduleListItem={addScheduleListItem}
+                  item={EmptyItem}
+                  bigTitle={"Dodaj wykład"}
+                  // pressHandlerDeleteItem={pressHandlerDeleteItem}
+                />
+                {/* </ScrollView> */}
               </View>
             </TouchableWithoutFeedback>
           </Modal>
@@ -104,7 +113,7 @@ export default function ScheduleList({ navigation }) {
             {days.map((propDays) => {
               return (
                 <View key={Math.random() * 1000}>
-                  <Text style={styles.date}>{propDays}</Text>
+                  <Text style={styles.date}>{convertDate(propDays)}</Text>
                   {scheduleData.map((item) => {
                     if (item.day === propDays) {
                       return (

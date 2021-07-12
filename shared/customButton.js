@@ -2,12 +2,12 @@ import React from "react";
 import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 
-export default function CustomButton({ text, onPress }) {
+export default function CustomButton({ text, icon, color, onPress }) {
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.button}>
         <Text style={styles.buttonText}>{text}</Text>
-        <MaterialIcons name="delete" size={18} color="#333" />
+        <MaterialIcons name={icon} size={18} color="white" />
       </View>
     </TouchableOpacity>
   );
@@ -15,16 +15,21 @@ export default function CustomButton({ text, onPress }) {
 
 const styles = StyleSheet.create({
   button: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: 8,
     paddingVertical: 14,
     paddingHorizontal: 10,
-    backgroundColor: "#f01d71",
+    backgroundColor: "green",
+    margin: 5,
   },
   buttonText: {
     color: "white",
     fontWeight: "bold",
     textTransform: "uppercase",
     fontSize: 16,
-    textAlign: "center",
+    // textAlign: "center",
   },
 });
