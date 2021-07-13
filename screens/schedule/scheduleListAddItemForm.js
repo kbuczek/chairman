@@ -58,13 +58,15 @@ const scheduleSchema = yup.object({
   notes: yup.string().max(200),
   alert: yup
     .number()
+    // .transform((value) => (isNaN(value) ? undefined : value))
     .test(
       "is-num-0-30",
       "Godzina musi mieścić się w przedziale od 0 do 30",
       (val) => {
         return val >= 0 && val <= 30;
       }
-    ),
+    )
+    .nullable(true),
 });
 
 export default function ScheduleListAddItemForm({
@@ -90,14 +92,14 @@ export default function ScheduleListAddItemForm({
               endingHour: item.endingHour.toString(),
               endingMinute: item.endingMinute.toString(),
               notes: item.notes,
-              alert: item.alert.toString(),
+              alert: item.alert,
             }}
             validationSchema={scheduleSchema}
             onSubmit={(values, actions) => {
               actions.resetForm();
               // console.log(item.key);
               // if (item.key !== "") {
-              //   pressHandlerDeleteItem(item.key);
+              //   pressHandlerDeleteItem(item.key); //TRZEBA TO ZROBIC, NIE USUWA PUSTYCH DNI
               // }
               addScheduleListItem(values);
             }}
@@ -236,10 +238,7 @@ export default function ScheduleListAddItemForm({
                 <Text style={globalStyles.errorText}>
                   {props.touched.notes && props.errors.notes}
                 </Text>
-                <Text>
-                  Dodaj alert w minutach przed końcem wykładu (np. czas na
-                  pytania):
-                </Text>
+                <Text>Dodaj alert (np. czas na pytania):</Text>
                 <TextInput
                   style={globalStyles.input}
                   placeholder="minuty przed końcem wykładu"

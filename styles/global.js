@@ -15,6 +15,9 @@ export const globalStyles = StyleSheet.create({
     padding: 20,
     paddingBottom: 50,
   },
+  row: {
+    flexDirection: "row",
+  },
   titleText: {
     fontFamily: "Nunito_700Bold",
     fontSize: 18,

@@ -2,12 +2,12 @@ import React from "react";
 import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 
-export default function EditButton({ text, onPress }) {
+export default function EditButton({ text, icon, onPress }) {
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.button}>
         <Text style={styles.buttonText}>{text}</Text>
-        <MaterialIcons name="create" size={18} color="white" />
+        <MaterialIcons name={icon} size={18} color="white" />
       </View>
     </TouchableOpacity>
   );
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingVertical: 14,
     paddingHorizontal: 10,
-    backgroundColor: "orange",
+    backgroundColor: "#427ad4",
     margin: 5,
   },
   buttonText: {
@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textTransform: "uppercase",
     fontSize: 16,
+    marginRight: 5,
     // textAlign: "center",
   },
 });

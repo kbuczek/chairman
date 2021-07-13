@@ -83,12 +83,16 @@ export default function ScheduleList({ navigation }) {
           <Modal visible={isModalOpen} animationType="slide">
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
               <View style={styles.modalContent}>
-                <MaterialIcons
-                  name="close"
-                  size={24}
-                  style={styles.modalClose}
-                  onPress={() => setIsModalOpen(false)}
-                />
+                <TouchableOpacity onPress={() => setIsModalOpen(false)}>
+                  <View style={globalStyles.row}>
+                    <MaterialIcons
+                      name="chevron-left"
+                      size={24}
+                      style={styles.modalClose}
+                    />
+                    <Text style={styles.modalCloseText}>Cofnij</Text>
+                  </View>
+                </TouchableOpacity>
                 {/* <ScrollView> */}
                 <ScheduleListAddItemForm
                   addScheduleListItem={addScheduleListItem}
@@ -185,11 +189,17 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   modalClose: {
-    flexDirection: "row",
-    marginTop: 20,
-    marginBottom: 10,
-    marginRight: 10,
-    alignSelf: "flex-end",
+    paddingTop: 30,
+    paddingBottom: 10,
+    // paddingRight: 10,
+    alignSelf: "flex-start",
+  },
+  modalCloseText: {
+    paddingTop: 32,
+    paddingBottom: 10,
+    paddingRight: 10,
+    marginLeft: 0,
+    alignSelf: "flex-start",
   },
   modalContent: { flex: 1, padding: 15 },
   date: {

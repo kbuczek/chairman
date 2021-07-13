@@ -9,6 +9,7 @@ import {
   Keyboard,
   Button,
   TextInput,
+  TouchableOpacity,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { globalStyles } from "../../styles/global";
@@ -34,6 +35,7 @@ export default function ListItemDetails({ route, navigation }) {
     endingHour,
     endingMinute,
     notes,
+    room,
     alert,
   } = route.params.item;
 
@@ -69,7 +71,8 @@ export default function ListItemDetails({ route, navigation }) {
               <Text style={globalStyles.title}>Przedłuż wykład</Text>
               <Text>
                 Wpisz o ile minut chcesz przedłużyć wybrany wykład i przesunąć
-                wszystkie następujące po nim wykłady o daną ilość minut.
+                WSZYSTKIE następujące po nim wykłady o daną ilość minut tego
+                samego dnia.
               </Text>
               <TextInput
                 style={globalStyles.input}
@@ -82,20 +85,24 @@ export default function ListItemDetails({ route, navigation }) {
         <Modal visible={isModalOpenEdit} animationType="slide">
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={globalStyles.modalContent}>
-              <MaterialIcons
-                name="close"
-                size={24}
-                style={styles.modalClose}
-                onPress={() => setIsModalOpenEdit(false)}
+              <TouchableOpacity onPress={() => setIsModalOpenEdit(false)}>
+                <View style={globalStyles.row}>
+                  <MaterialIcons
+                    name="chevron-left"
+                    size={24}
+                    style={styles.modalClose}
+                  />
+                  <Text style={styles.modalCloseText}>Cofnij</Text>
+                </View>
+              </TouchableOpacity>
+              {/* <ScrollView> */}
+              <ScheduleListAddItemForm
+                addScheduleListItem={route.params.addScheduleListItem}
+                item={route.params.item}
+                bigTitle={"Edytuj Wykład"}
+                // pressHandlerDeleteItem={route.params.pressHandlerDeleteItem}
               />
-              <ScrollView>
-                <ScheduleListAddItemForm
-                  addScheduleListItem={route.params.addScheduleListItem}
-                  item={route.params.item}
-                  bigTitle={"Edytuj Wykład"}
-                  // pressHandlerDeleteItem={route.params.pressHandlerDeleteItem}
-                />
-              </ScrollView>
+              {/* </ScrollView> */}
             </View>
           </TouchableWithoutFeedback>
         </Modal>
@@ -103,6 +110,7 @@ export default function ListItemDetails({ route, navigation }) {
         <Card>
           <Text style={styles.title}>Tytuł: {title}</Text>
           <Text style={styles.text}>Prowadzący: {person}</Text>
+          <Text>Sala: {room}</Text>
           <Text style={styles.text}>Dzień: {day}</Text>
           <Text style={styles.text}>
             Godziny: {displayFrontZeros(startingHour)}:
@@ -124,10 +132,12 @@ export default function ListItemDetails({ route, navigation }) {
         </Card>
         <EditButton
           text="Przedłuż wykład"
+          icon="arrow-downward"
           onPress={() => setIsModalOpenExtendLecture(true)}
         />
         <EditButton
           text="edytuj informacje"
+          icon="create"
           onPress={() => setIsModalOpenEdit(true)}
         />
         <DeleteButton text="usuń" onPress={pressHandler1} />
@@ -155,10 +165,16 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   modalClose: {
-    flexDirection: "row",
-    marginTop: 20,
-    marginBottom: 10,
-    marginRight: 10,
-    alignSelf: "flex-end",
+    paddingTop: 30,
+    paddingBottom: 10,
+    // paddingRight: 10,
+    alignSelf: "flex-start",
+  },
+  modalCloseText: {
+    paddingTop: 32,
+    paddingBottom: 10,
+    paddingRight: 10,
+    marginLeft: 0,
+    alignSelf: "flex-start",
   },
 });
