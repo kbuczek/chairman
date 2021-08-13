@@ -1,12 +1,12 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import About from "../screens/about";
 import { MaterialIcons } from "@expo/vector-icons";
+import Settings from "../screens/settings/Settings";
 
 const Stack = createStackNavigator();
 
-export default aboutStackNav = ({ navigation }) => {
+export default settingsStackNav = ({ navigation }) => {
   const openDrawer = () => {
     navigation.openDrawer();
   };
@@ -25,10 +25,10 @@ export default aboutStackNav = ({ navigation }) => {
       }}
     >
       <Stack.Screen
-        name="About"
-        component={About}
+        name="Settings"
+        component={Settings}
         options={{
-          title: "About",
+          title: "Ustawienia",
           headerLeft: () => (
             <MaterialIcons
               name="menu"

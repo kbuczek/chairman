@@ -19,22 +19,43 @@ import { globalStyles } from "../../styles/global";
 import Data from "../../data/scheduleData";
 import EmptyItem from "../../data/scheduleDataEmptyItem";
 import convertDate from "../../shared/convertDate";
+import { useFetch } from "../../shared/Api/useFetch";
+
+const url = "http://10.0.2.2:5000/schedule";
 
 export default function ScheduleList({ navigation }) {
+  const { loading, products } = useFetch(url);
   const [scheduleData, setScheduleData] = useState(Data);
   const [days, setDays] = useState([]);
   const [dayItems, setDayItems] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newProducts, setNewProducts] = useState([]);
+  const option = "fizyka2021";
 
   // useEffect(() => {
   //   updateDays();
   //   // return () => setDays([]);
   // }, [scheduleData]);
 
+  useEffect(() => {
+    setNewProducts(products.filter((item) => item.conference === option));
+  }, []);
+
+  useEffect(() => {
+    // updateDays();
+    sortNewProducts();
+  });
+
+  const sortNewProducts = () => {
+    newProducts.sort(
+      (a, b) => parseInt(a.startingHour) - parseInt(b.startingHour)
+    );
+  };
+
   const updateDays = () => {
     console.log("updateDays()", days);
 
-    scheduleData.map(({ day }) => {
+    newProducts.map(({ day }) => {
       if (!days.includes(day)) {
         setDays([...days, day]);
       }
@@ -116,14 +137,14 @@ export default function ScheduleList({ navigation }) {
 
           {updateDays()}
           <View style={styles.content}>
-            {days.map((propDays) => {
+            {days.map((propDays, index) => {
               return (
                 <View key={Math.random() * 1000}>
                   <Text style={styles.date}>{convertDate(propDays)}</Text>
-                  {scheduleData.map((item) => {
+                  {newProducts.map((item) => {
                     if (item.day === propDays) {
                       return (
-                        <View key={item.key}>
+                        <View key={item._id}>
                           <ScheduleListItem
                             item={item}
                             pressHandler={() =>

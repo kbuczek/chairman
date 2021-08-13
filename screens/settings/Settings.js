@@ -1,12 +1,12 @@
 import React from "react";
 import { StyleSheet, View, Text, Image } from "react-native";
-import { globalStyles } from "../styles/global";
+import { globalStyles } from "../../styles/global";
 
-export default function About() {
+export default function Settings() {
   return (
     <View style={globalStyles.container}>
-      <Text>About Screen</Text>
-      <Image source={require("../assets/working.jpg")} />
+      <Text>Wpisz nazwę konferencji</Text>
+      <Text>Wpisz nazwę sali</Text>
     </View>
   );
 }
