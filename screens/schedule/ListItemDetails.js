@@ -19,6 +19,8 @@ import EditButton from "../../shared/editButton";
 import { ScrollView } from "react-native-gesture-handler";
 import CurrentTimer from "../../shared/currentTimer";
 import ScheduleListAddItemForm from "./scheduleListAddItemForm";
+import ScheduleListExtendItemFrom from "./scheduleListExtendItemForm";
+import ScheduleListExtendItemForm from "./scheduleListExtendItemForm";
 
 export default function ListItemDetails({ route, navigation }) {
   const [dt, setDt] = useState(new Date().toLocaleString());
@@ -62,13 +64,19 @@ export default function ListItemDetails({ route, navigation }) {
         <Modal visible={isModalOpenExtendLecture} animationType="slide">
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={globalStyles.modalContent}>
-              <MaterialIcons
-                name="close"
-                size={24}
-                style={styles.modalClose}
+              <TouchableOpacity
                 onPress={() => setIsModalOpenExtendLecture(false)}
-              />
-              <Text style={globalStyles.title}>Przedłuż wykład</Text>
+              >
+                <View style={globalStyles.row}>
+                  <MaterialIcons
+                    name="chevron-left"
+                    size={24}
+                    style={styles.modalClose}
+                  />
+                  <Text style={styles.modalCloseText}>Cofnij</Text>
+                </View>
+              </TouchableOpacity>
+              {/* <Text style={globalStyles.title}>Przedłuż wykład</Text>
               <Text>
                 Wpisz o ile minut chcesz przedłużyć wybrany wykład i przesunąć
                 WSZYSTKIE następujące po nim wykłady o daną ilość minut tego
@@ -77,7 +85,8 @@ export default function ListItemDetails({ route, navigation }) {
               <TextInput
                 style={globalStyles.input}
                 placeholder="wpisz liczbę minut"
-              />
+              /> */}
+              <ScheduleListExtendItemForm bigTitle={"Przedłuż wykład"} />
             </View>
           </TouchableWithoutFeedback>
         </Modal>

@@ -50,6 +50,8 @@ export default function ScheduleList({ navigation }) {
     console.log(days);
   };
 
+  const checkIfDayHasItemsLeft = () => {};
+
   const pressHandlerDeleteItem = (key) => {
     console.log("DELETE");
     //sprawdzic, czy dzien zawiera jeszcze jakies wyklady

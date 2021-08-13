@@ -19,7 +19,7 @@ const convertDate = (inputDate) => {
     "Maja",
     "Czerwca",
     "Lipca",
-    "Sierpienia",
+    "Sierpnia",
     "Września",
     "Października",
     "Listopada",

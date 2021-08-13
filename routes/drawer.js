@@ -2,7 +2,6 @@ import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
 import ScheduleStackNav from "./scheduleStackNav";
-import HomeStackNav from "./homeStackNav";
 import AboutStackNav from "./aboutStackNav";
 
 const Drawer = createDrawerNavigator();
