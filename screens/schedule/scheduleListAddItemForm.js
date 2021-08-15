@@ -13,8 +13,10 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import { ScrollView } from "react-native-gesture-handler";
 import CustomButton from "../../shared/customButton";
+const thisConference = "fizyka2021";
 
 const scheduleSchema = yup.object({
+  conference: yup.string().required().max(40),
   room: yup.string().required().max(40),
   title: yup.string().required().max(40),
   person: yup.string().required().max(40),
@@ -83,6 +85,7 @@ export default function ScheduleListAddItemForm({
 
           <Formik
             initialValues={{
+              conference: thisConference,
               room: item.room,
               title: item.title,
               person: item.person,

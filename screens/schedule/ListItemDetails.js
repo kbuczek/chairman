@@ -19,7 +19,6 @@ import EditButton from "../../shared/editButton";
 import { ScrollView } from "react-native-gesture-handler";
 import CurrentTimer from "../../shared/currentTimer";
 import ScheduleListAddItemForm from "./scheduleListAddItemForm";
-import ScheduleListExtendItemFrom from "./scheduleListExtendItemForm";
 import ScheduleListExtendItemForm from "./scheduleListExtendItemForm";
 
 export default function ListItemDetails({ route, navigation }) {

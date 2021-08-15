@@ -25,9 +25,9 @@ const url = "http://10.0.2.2:5000/schedule";
 
 export default function ScheduleList({ navigation }) {
   const { loading, products } = useFetch(url);
-  const [scheduleData, setScheduleData] = useState(Data);
+  // const [scheduleData, setScheduleData] = useState(Data);
   const [days, setDays] = useState([]);
-  const [dayItems, setDayItems] = useState([]);
+  // const [dayItems, setDayItems] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newProducts, setNewProducts] = useState([]);
   const option = "fizyka2021";
@@ -39,7 +39,7 @@ export default function ScheduleList({ navigation }) {
 
   useEffect(() => {
     setNewProducts(products.filter((item) => item.conference === option));
-  }, []);
+  }, [products]);
 
   useEffect(() => {
     // updateDays();
@@ -163,25 +163,6 @@ export default function ScheduleList({ navigation }) {
                 </View>
               );
             })}
-            {/* <View style={styles.list}>
-              <FlatList
-                data={scheduleData}
-                // dont have to add keyExtractor if you already have key property
-                renderItem={({ item }) => (
-                  <ScheduleListItem
-                    item={item}
-                    pressHandler={() =>
-                      navigation.navigate("ListItemDetails", {
-                        item,
-                        pressHandlerDeleteItem,
-                        pressHandlerExtendLecture,
-                        addScheduleListItem,
-                      })
-                    }
-                  />
-                )}
-              />
-            </View> */}
           </View>
         </View>
       </ScrollView>
