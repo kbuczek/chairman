@@ -20,16 +20,19 @@ import Data from "../../data/scheduleData";
 import EmptyItem from "../../data/scheduleDataEmptyItem";
 import convertDate from "../../shared/convertDate";
 import { useFetch } from "../../shared/Api/useFetch";
-
-const url = "http://10.0.2.2:5000/schedule";
+import FetchAdd from "../../shared/Api/fetchAdd";
+import Urls from "../../shared/Api/urls";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function ScheduleList({ navigation }) {
-  const { loading, products } = useFetch(url);
+  const { loading, products } = useFetch(Urls.baseUrl);
   // const [scheduleData, setScheduleData] = useState(Data);
   const [days, setDays] = useState([]);
   // const [dayItems, setDayItems] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newProducts, setNewProducts] = useState([]);
+  const [conference, setConference] = useState("");
+  const [room, setRoom] = useState("");
   const option = "fizyka2021";
 
   // useEffect(() => {
@@ -38,13 +41,36 @@ export default function ScheduleList({ navigation }) {
   // }, [scheduleData]);
 
   useEffect(() => {
+    getData();
+  });
+
+  useEffect(() => {
+    getData();
     setNewProducts(products.filter((item) => item.conference === option));
   }, [products]);
 
   useEffect(() => {
-    // updateDays();
     sortNewProducts();
   });
+
+  const getData = async () => {
+    try {
+      const getDataConference = await AsyncStorage.getItem("savedConference");
+      if (getDataConference !== null) {
+        setConference(getDataConference);
+      }
+    } catch (e) {
+      console.log("scheduleList.js getData() reading error ", e);
+    }
+    try {
+      const getDataRoom = await AsyncStorage.getItem("savedRoom");
+      if (getDataRoom !== null) {
+        setRoom(getDataRoom);
+      }
+    } catch (e) {
+      console.log("scheduleList.js getData() reading error ", e);
+    }
+  };
 
   const sortNewProducts = () => {
     newProducts.sort(
@@ -53,7 +79,7 @@ export default function ScheduleList({ navigation }) {
   };
 
   const updateDays = () => {
-    console.log("updateDays()", days);
+    // console.log("updateDays()", days);
 
     newProducts.map(({ day }) => {
       if (!days.includes(day)) {
@@ -68,7 +94,7 @@ export default function ScheduleList({ navigation }) {
       // return r;
     });
 
-    console.log(days);
+    // console.log(days);
   };
 
   const checkIfDayHasItemsLeft = () => {};
@@ -88,13 +114,13 @@ export default function ScheduleList({ navigation }) {
   };
 
   const addScheduleListItem = (item) => {
-    if (!item.key) {
-      item.key = Math.random().toString(); //find better way to generate key
-    }
-    console.log(item);
-    setScheduleData((prevScheduleData) => {
-      return [item, ...prevScheduleData];
-    });
+    // if (!item.key) {
+    //   item.key = Math.random().toString(); //find better way to generate key
+    // }
+    FetchAdd(Urls.add, "POST", item);
+    // setScheduleData((prevScheduleData) => {
+    //   return [item, ...prevScheduleData];
+    // });
     setIsModalOpen(false);
   };
 
@@ -130,8 +156,8 @@ export default function ScheduleList({ navigation }) {
 
           <TouchableOpacity onPress={() => setIsModalOpen(true)}>
             <View style={styles.modalToggle}>
-              <MaterialIcons name="add" size={24} />
-              <Text>Dodaj wykład</Text>
+              <Text style={{ color: "white" }}>Dodaj wykład</Text>
+              <MaterialIcons name="add" size={19} color={"white"} />
             </View>
           </TouchableOpacity>
 
@@ -186,11 +212,13 @@ const styles = StyleSheet.create({
   modalToggle: {
     flexDirection: "row",
     marginBottom: 10,
-    borderWidth: 2,
-    borderColor: "#dcdcdc",
+    // borderWidth: 2,
+    // borderColor: "#21963c",
     borderRadius: 10,
     padding: 10,
     alignSelf: "center",
+    color: "white",
+    backgroundColor: "#28a745",
   },
   modalClose: {
     paddingTop: 30,

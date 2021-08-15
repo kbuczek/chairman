@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Button,
@@ -13,7 +13,7 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import { ScrollView } from "react-native-gesture-handler";
 import CustomButton from "../../shared/customButton";
-const thisConference = "fizyka2021";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const scheduleSchema = yup.object({
   conference: yup.string().required().max(40),
@@ -77,6 +77,32 @@ export default function ScheduleListAddItemForm({
   bigTitle,
   // pressHandlerDeleteItem,
 }) {
+  const [conference, setConference] = useState("");
+  const [room, setRoom] = useState("");
+
+  useEffect(() => {
+    getData();
+    console.log("conference", conference);
+  }, []);
+
+  const getData = async () => {
+    try {
+      const getDataConference = await AsyncStorage.getItem("savedConference");
+      if (getDataConference !== null) {
+        setConference(getDataConference);
+      }
+    } catch (e) {
+      console.log("Settings.js getData() reading error ", e);
+    }
+    try {
+      const getDataRoom = await AsyncStorage.getItem("savedRoom");
+      if (getDataRoom !== null) {
+        setRoom(getDataRoom);
+      }
+    } catch (e) {
+      console.log("Settings.js getData() reading error ", e);
+    }
+  };
   return (
     <ScrollView>
       <TouchableWithoutFeedback>
@@ -85,8 +111,8 @@ export default function ScheduleListAddItemForm({
 
           <Formik
             initialValues={{
-              conference: thisConference,
-              room: item.room,
+              conference: conference,
+              room: room,
               title: item.title,
               person: item.person,
               day: item.day,
@@ -98,6 +124,7 @@ export default function ScheduleListAddItemForm({
               alert: item.alert,
             }}
             validationSchema={scheduleSchema}
+            enableReinitialize={true}
             onSubmit={(values, actions) => {
               actions.resetForm();
               // console.log(item.key);
@@ -109,17 +136,6 @@ export default function ScheduleListAddItemForm({
           >
             {(props) => (
               <View>
-                <TextInput
-                  style={globalStyles.input}
-                  placeholder="Sala*"
-                  placeholderTextColor="gray"
-                  onChangeText={props.handleChange("room")}
-                  value={props.values.room}
-                  onBlur={props.handleBlur("room")}
-                />
-                <Text style={globalStyles.errorText}>
-                  {props.touched.room && props.errors.room}
-                </Text>
                 <TextInput
                   style={globalStyles.input}
                   placeholder="Tytuł wykładu*"
