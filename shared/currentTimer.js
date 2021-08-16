@@ -76,7 +76,7 @@ export default function CurrentTimer({
         }
         return (
           <Text style={styles.starting}>
-            {text && "Do rozpoczęcia pozostało:"}+ {thisHour} godzin{", "}
+            {text && "Do rozpoczęcia pozostało: "}- {thisHour} godzin{", "}
             {thisMinute} minut
           </Text>
         );
@@ -89,7 +89,7 @@ export default function CurrentTimer({
         }
         return (
           <Text style={styles.ending}>
-            {text && "Do zakończenia pozostało:"} {thisHour} godzin{", "}
+            {text && "Do zakończenia pozostało: "} {thisHour} godzin{", "}
             {thisMinute} minut
           </Text>
         );
@@ -98,7 +98,7 @@ export default function CurrentTimer({
         let thisMinute = overtimeMinutes - thisHour * 60;
         return (
           <Text style={styles.overtime}>
-            {text && "Po czasie:"}- {thisHour} godzin{", "}
+            {text && "Po czasie: "}+ {thisHour} godzin{", "}
             {thisMinute} minut
           </Text>
         );

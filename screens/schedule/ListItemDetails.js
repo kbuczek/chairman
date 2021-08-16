@@ -27,7 +27,7 @@ export default function ListItemDetails({ route, navigation }) {
     useState(false);
   const [isModalOpenEdit, setIsModalOpenEdit] = useState(false);
   const {
-    key,
+    _id,
     title,
     person,
     day,
@@ -46,7 +46,7 @@ export default function ListItemDetails({ route, navigation }) {
         text: "Tak",
         onPress: () => {
           navigation.goBack();
-          route.params.pressHandlerDeleteItem(key);
+          route.params.pressHandlerDeleteItem(_id);
         },
       },
       { text: "Nie" },
@@ -75,16 +75,6 @@ export default function ListItemDetails({ route, navigation }) {
                   <Text style={styles.modalCloseText}>Cofnij</Text>
                 </View>
               </TouchableOpacity>
-              {/* <Text style={globalStyles.title}>Przedłuż wykład</Text>
-              <Text>
-                Wpisz o ile minut chcesz przedłużyć wybrany wykład i przesunąć
-                WSZYSTKIE następujące po nim wykłady o daną ilość minut tego
-                samego dnia.
-              </Text>
-              <TextInput
-                style={globalStyles.input}
-                placeholder="wpisz liczbę minut"
-              /> */}
               <ScheduleListExtendItemForm bigTitle={"Przedłuż wykład"} />
             </View>
           </TouchableWithoutFeedback>
@@ -105,7 +95,7 @@ export default function ListItemDetails({ route, navigation }) {
               </TouchableOpacity>
               {/* <ScrollView> */}
               <ScheduleListAddItemForm
-                addScheduleListItem={route.params.addScheduleListItem}
+                addScheduleListItem={route.params.editScheduleListItem}
                 item={route.params.item}
                 bigTitle={"Edytuj Wykład"}
                 // pressHandlerDeleteItem={route.params.pressHandlerDeleteItem}
@@ -159,15 +149,16 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   title: {
-    fontFamily: "Nunito_700Bold",
+    // fontFamily: "Nunito_700Bold",
+    fontWeight: "bold",
     fontSize: 20,
   },
   text: {
-    fontFamily: "Nunito_700Bold",
+    // fontFamily: "Nunito_700Bold",
     padding: 10,
   },
   notes: {
-    fontFamily: "Nunito_700Bold",
+    // fontFamily: "Nunito_700Bold",
     fontSize: 20,
     color: "#1471f5",
     padding: 10,

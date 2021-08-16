@@ -25,7 +25,6 @@ export default function Settings() {
 
   useEffect(() => {
     getData();
-    console.log("conference", conference);
   }, []);
 
   const storeData = async (values) => {

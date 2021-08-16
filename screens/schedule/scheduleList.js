@@ -16,42 +16,43 @@ import { MaterialIcons } from "@expo/vector-icons";
 import ScheduleListItem from "./scheduleListItem";
 import ScheduleListAddItemForm from "./scheduleListAddItemForm";
 import { globalStyles } from "../../styles/global";
-import Data from "../../data/scheduleData";
 import EmptyItem from "../../data/scheduleDataEmptyItem";
 import convertDate from "../../shared/convertDate";
 import { useFetch } from "../../shared/Api/useFetch";
-import FetchAdd from "../../shared/Api/fetchAdd";
+import FetchWithData from "../../shared/Api/fetchWithData";
+import FetchNoData from "../../shared/Api/fetchNoData";
 import Urls from "../../shared/Api/urls";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { set } from "react-native-reanimated";
 
 export default function ScheduleList({ navigation }) {
   const { loading, products } = useFetch(Urls.baseUrl);
   // const [scheduleData, setScheduleData] = useState(Data);
+  const [, updateState] = React.useState();
+  const forceUpdate = React.useCallback(() => updateState({}), []);
   const [days, setDays] = useState([]);
   // const [dayItems, setDayItems] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newProducts, setNewProducts] = useState([]);
   const [conference, setConference] = useState("");
   const [room, setRoom] = useState("");
-  const option = "fizyka2021";
-
-  // useEffect(() => {
-  //   updateDays();
-  //   // return () => setDays([]);
-  // }, [scheduleData]);
 
   useEffect(() => {
     getData();
+    // updateDays();
   });
 
   useEffect(() => {
-    getData();
-    setNewProducts(products.filter((item) => item.conference === option));
-  }, [products]);
+    filterProducts();
+  }, [products, conference, room]);
 
-  useEffect(() => {
-    sortNewProducts();
-  });
+  const filterProducts = () => {
+    setNewProducts(
+      products.filter(
+        (item) => item.conference === conference && item.room === room
+      )
+    );
+  };
 
   const getData = async () => {
     try {
@@ -70,6 +71,7 @@ export default function ScheduleList({ navigation }) {
     } catch (e) {
       console.log("scheduleList.js getData() reading error ", e);
     }
+    filterProducts();
   };
 
   const sortNewProducts = () => {
@@ -80,7 +82,7 @@ export default function ScheduleList({ navigation }) {
 
   const updateDays = () => {
     // console.log("updateDays()", days);
-
+    // setDays([]);
     newProducts.map(({ day }) => {
       if (!days.includes(day)) {
         setDays([...days, day]);
@@ -99,14 +101,11 @@ export default function ScheduleList({ navigation }) {
 
   const checkIfDayHasItemsLeft = () => {};
 
-  const pressHandlerDeleteItem = (key) => {
+  const pressHandlerDeleteItem = (id) => {
     console.log("DELETE");
-    //sprawdzic, czy dzien zawiera jeszcze jakies wyklady
-    setScheduleData((previousScheduleData) => {
-      return previousScheduleData.filter(
-        (scheduleData) => scheduleData.key != key
-      );
-    });
+    FetchNoData(Urls.baseUrl + `/${id}`, "DELETE");
+    forceUpdate();
+    //sprawdzic, czy dzien zawiera jeszcze jakies wyklady i go usunąć
   };
 
   const pressHandlerExtendLecture = (key) => {
@@ -114,14 +113,15 @@ export default function ScheduleList({ navigation }) {
   };
 
   const addScheduleListItem = (item) => {
-    // if (!item.key) {
-    //   item.key = Math.random().toString(); //find better way to generate key
-    // }
-    FetchAdd(Urls.add, "POST", item);
-    // setScheduleData((prevScheduleData) => {
-    //   return [item, ...prevScheduleData];
-    // });
+    FetchWithData(Urls.add, "POST", item);
+    forceUpdate();
     setIsModalOpen(false);
+  };
+
+  const editScheduleListItem = (item) => {
+    FetchWithData(Urls.add, "POST", item);
+
+    forceUpdate();
   };
 
   return (
@@ -162,6 +162,7 @@ export default function ScheduleList({ navigation }) {
           </TouchableOpacity>
 
           {updateDays()}
+          {sortNewProducts()}
           <View style={styles.content}>
             {days.map((propDays, index) => {
               return (
@@ -178,7 +179,7 @@ export default function ScheduleList({ navigation }) {
                                 item,
                                 pressHandlerDeleteItem,
                                 pressHandlerExtendLecture,
-                                addScheduleListItem,
+                                editScheduleListItem,
                               })
                             }
                           />

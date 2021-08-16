@@ -1,6 +1,4 @@
-// import FormData from "FormData";
-
-const fetchAdd = async (thisUrl, thisMethod, thisData) => {
+const fetchWithData = async (thisUrl, thisMethod, thisData) => {
   // console.log("FETCH", thisData);
   // var data = new FormData();
 
@@ -19,6 +17,7 @@ const fetchAdd = async (thisUrl, thisMethod, thisData) => {
     // body: data,
     body: JSON.stringify(thisData),
   });
+
   if (response.status !== 200) {
     throw new Error("cannot fetch data"); //error causes promise by async function to be rejected
   }
@@ -26,4 +25,4 @@ const fetchAdd = async (thisUrl, thisMethod, thisData) => {
   console.log("RESPONSE", resData);
 };
 
-export default fetchAdd;
+export default fetchWithData;
