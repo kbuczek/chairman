@@ -26,7 +26,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { set } from "react-native-reanimated";
 
 export default function ScheduleList({ navigation }) {
-  const { loading, products } = useFetch(Urls.baseUrl);
+  let { loading, products } = useFetch(Urls.baseUrl);
   // const [scheduleData, setScheduleData] = useState(Data);
   const [, updateState] = React.useState();
   const forceUpdate = React.useCallback(() => updateState({}), []);
@@ -43,7 +43,9 @@ export default function ScheduleList({ navigation }) {
   });
 
   useEffect(() => {
+    // setDays([]);
     filterProducts();
+    console.log("filer");
   }, [products, conference, room]);
 
   const filterProducts = () => {
@@ -71,7 +73,7 @@ export default function ScheduleList({ navigation }) {
     } catch (e) {
       console.log("scheduleList.js getData() reading error ", e);
     }
-    filterProducts();
+    // filterProducts();
   };
 
   const sortNewProducts = () => {
@@ -82,7 +84,7 @@ export default function ScheduleList({ navigation }) {
 
   const updateDays = () => {
     // console.log("updateDays()", days);
-    // setDays([]);
+    // setDays(".");
     newProducts.map(({ day }) => {
       if (!days.includes(day)) {
         setDays([...days, day]);
@@ -99,8 +101,6 @@ export default function ScheduleList({ navigation }) {
     // console.log(days);
   };
 
-  const checkIfDayHasItemsLeft = () => {};
-
   const pressHandlerDeleteItem = (id) => {
     console.log("DELETE");
     FetchNoData(Urls.baseUrl + `/${id}`, "DELETE");
@@ -112,14 +112,17 @@ export default function ScheduleList({ navigation }) {
     console.log("EXTEND", item);
   };
 
-  const addScheduleListItem = (item) => {
-    FetchWithData(Urls.add, "POST", item);
-    forceUpdate();
+  const addScheduleListItem = (newValues, id) => {
+    FetchWithData(Urls.add, "POST", newValues);
     setIsModalOpen(false);
+    forceUpdate();
   };
 
-  const editScheduleListItem = (item) => {
-    FetchWithData(Urls.add, "POST", item);
+  const editScheduleListItem = (newValues, id) => {
+    console.log("EDIT");
+    navigation.goBack();
+    FetchNoData(Urls.baseUrl + `/${id}`, "DELETE");
+    FetchWithData(Urls.add, "POST", newValues);
 
     forceUpdate();
   };

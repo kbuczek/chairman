@@ -20,6 +20,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import CurrentTimer from "../../shared/currentTimer";
 import ScheduleListAddItemForm from "./scheduleListAddItemForm";
 import ScheduleListExtendItemForm from "./scheduleListExtendItemForm";
+import convertDate from "../../shared/convertDate";
 
 export default function ListItemDetails({ route, navigation }) {
   const [dt, setDt] = useState(new Date().toLocaleString());
@@ -53,7 +54,9 @@ export default function ListItemDetails({ route, navigation }) {
     ]);
   };
 
-  const pressHandler2 = () => {};
+  const pressHandler2 = () => {
+    navigation.goBack();
+  };
 
   const displayFrontZeros = (unit) => (unit < 10 ? `0${unit}` : unit);
 
@@ -106,16 +109,29 @@ export default function ListItemDetails({ route, navigation }) {
         </Modal>
 
         <Card>
-          <Text style={styles.title}>Tytuł: {title}</Text>
-          <Text style={styles.text}>Prowadzący: {person}</Text>
-          <Text>Sala: {room}</Text>
-          <Text style={styles.text}>Dzień: {day}</Text>
+          <Text style={styles.smallText}>Tytuł: </Text>
+          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.smallText}>Prowadzący: </Text>
+          <Text style={styles.text}>{person}</Text>
+          <Text style={styles.smallText}>Sala: </Text>
+          <Text style={styles.text}>{room}</Text>
+          <Text style={styles.smallText}>Dzień: </Text>
+          <Text style={styles.text}>{convertDate(day)}</Text>
+          <Text style={styles.smallText}>Czas trwania: </Text>
           <Text style={styles.text}>
-            Godziny: {displayFrontZeros(startingHour)}:
+            {displayFrontZeros(startingHour)}:
             {displayFrontZeros(startingMinute)} -{" "}
             {displayFrontZeros(endingHour)}:{displayFrontZeros(endingMinute)}
           </Text>
-          <Text style={styles.notes}>Notatki: {notes}</Text>
+          <View
+            style={{
+              borderBottomColor: "lightgray",
+              borderBottomWidth: 1,
+              marginBottom: 10,
+            }}
+          />
+          <Text style={styles.smallTextNotes}>Notatki: </Text>
+          <Text style={styles.notes}>{notes}</Text>
           {/* <Button title="Usuń wykład" color="red" /> */}
           <CurrentTimer
             title={title}
@@ -151,17 +167,33 @@ const styles = StyleSheet.create({
   title: {
     // fontFamily: "Nunito_700Bold",
     fontWeight: "bold",
-    fontSize: 20,
+    fontSize: 25,
+    paddingLeft: 15,
+    marginBottom: 8,
   },
   text: {
     // fontFamily: "Nunito_700Bold",
-    padding: 10,
+    // padding: 10,
+    fontSize: 25,
+    paddingLeft: 15,
+    marginBottom: 8,
+  },
+  smallText: {
+    fontSize: 15,
+  },
+  smallTextNotes: {
+    fontSize: 15,
+    color: "#FF8800",
   },
   notes: {
     // fontFamily: "Nunito_700Bold",
     fontSize: 20,
-    color: "#1471f5",
-    padding: 10,
+    // color: "#f7b228"
+    color: "#FF8800",
+    // backgroundColor: "#f7b228",
+    borderRadius: 5,
+    paddingLeft: 15,
+    // padding: 10,
   },
   modalClose: {
     paddingTop: 30,

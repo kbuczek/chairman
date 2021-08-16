@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
-  Button,
+  Picker,
   TextInput,
   View,
   Text,
@@ -16,13 +16,14 @@ import CustomButton from "../../shared/customButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const scheduleSchema = yup.object({
-  conference: yup.string().required().max(40),
+  conference: yup.string().required().max(100),
   room: yup.string().required().max(40),
-  title: yup.string().required().max(40),
-  person: yup.string().required().max(40),
-  day: yup.string().required().max(40),
+  title: yup.string().required().max(100),
+  person: yup.string().required().max(100),
+  day: yup.string().required().max(10),
   startingHour: yup
     .number()
+    .integer()
     .test(
       "is-num-0-24",
       "Godzina musi mieścić się w przedziale od 0 do 24",
@@ -32,6 +33,7 @@ const scheduleSchema = yup.object({
     ),
   startingMinute: yup
     .number()
+    .integer()
     .test(
       "is-num-0-59",
       "Minuty muszą mieścić się w przedziale od 0 do 59",
@@ -41,6 +43,7 @@ const scheduleSchema = yup.object({
     ),
   endingHour: yup
     .number()
+    .integer()
     .test(
       "is-num-0-24",
       "Godzina musi mieścić się w przedziale od 0 do 24",
@@ -50,6 +53,7 @@ const scheduleSchema = yup.object({
     ),
   endingMinute: yup
     .number()
+    .integer()
     .test(
       "is-num-0-59",
       "Minuty muszą mieścić się w przedziale od 0 do 59",
@@ -57,7 +61,7 @@ const scheduleSchema = yup.object({
         return val >= 0 && val <= 59;
       }
     ),
-  notes: yup.string().max(200),
+  notes: yup.string().max(400),
   alert: yup
     .number()
     // .transform((value) => (isNaN(value) ? undefined : value))
@@ -79,6 +83,8 @@ export default function ScheduleListAddItemForm({
 }) {
   const [conference, setConference] = useState("");
   const [room, setRoom] = useState("");
+
+  const [selectedValue, setSelectedValue] = useState("java");
 
   useEffect(() => {
     getData();
@@ -127,11 +133,7 @@ export default function ScheduleListAddItemForm({
             enableReinitialize={true}
             onSubmit={(values, actions) => {
               actions.resetForm();
-              // console.log(item.key);
-              // if (item.key !== "") {
-              //   pressHandlerDeleteItem(item.key); //TRZEBA TO ZROBIC, NIE USUWA PUSTYCH DNI
-              // }
-              addScheduleListItem(values);
+              addScheduleListItem(values, item._id);
             }}
           >
             {(props) => (
@@ -168,17 +170,6 @@ export default function ScheduleListAddItemForm({
                   onBlur={props.handleBlur("day")}
                   keyboardType={"phone-pad"}
                 />
-                {/* <DatePicker
-              selected={new Date()}
-              value={props.values.day}
-              onChange={props.handleChange("day")} //only when value has changed
-            /> */}
-                {/* <RNDateTimePicker
-              mode="date"
-              value={props.values.day}
-              onChangeText={props.handleChange("day")}
-            /> */}
-
                 <Text style={globalStyles.errorText}>
                   {props.touched.day && props.errors.day}
                 </Text>
@@ -270,11 +261,6 @@ export default function ScheduleListAddItemForm({
                 <Text style={globalStyles.errorText}>
                   {props.touched.alert && props.errors.alert}
                 </Text>
-                {/* <Button
-                  title={bigTitle}
-                  color="green"
-                  onPress={props.handleSubmit}
-                /> */}
                 <CustomButton
                   text={bigTitle}
                   icon="add"
