@@ -12,7 +12,8 @@ const fetchNoData = async (thisUrl, thisMethod) => {
     throw new Error("cannot fetch data"); //error causes promise by async function to be rejected
   }
   const resData = await response.json();
-  console.log("RESPONSE", resData);
+  // console.log("RESPONSE", resData);
+  return resData;
 };
 
 export default fetchNoData;

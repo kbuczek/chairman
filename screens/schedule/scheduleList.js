@@ -26,27 +26,42 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { set } from "react-native-reanimated";
 
 export default function ScheduleList({ navigation }) {
-  let { loading, products } = useFetch(Urls.baseUrl);
+  // let { loading, products } = useFetch(Urls.baseUrl);
   // const [scheduleData, setScheduleData] = useState(Data);
-  const [, updateState] = React.useState();
-  const forceUpdate = React.useCallback(() => updateState({}), []);
   const [days, setDays] = useState([]);
-  // const [dayItems, setDayItems] = useState([]);
+  const [products, setProducts] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newProducts, setNewProducts] = useState([]);
   const [conference, setConference] = useState("");
   const [room, setRoom] = useState("");
 
-  useEffect(() => {
-    getData();
-    // updateDays();
-  });
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      getData();
+      FetchNoData(Urls.baseUrl).then((response) => setProducts(response));
+    });
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe;
+  }, [navigation]);
 
   useEffect(() => {
-    // setDays([]);
+    // setProducts(FetchNoData(Urls.baseUrl));
+    FetchNoData(Urls.baseUrl).then((response) => setProducts(response));
+    getData();
+    console.log("here");
+    // updateDays();
+  }, []);
+
+  useEffect(() => {
     filterProducts();
-    console.log("filer");
-  }, [products, conference, room]);
+  }, [products]);
+
+  useEffect(() => {
+    updateDays();
+    console.log("NEWPRODUSSSSSS", newProducts);
+    console.log("DAYS", days);
+  }, [newProducts]);
 
   const filterProducts = () => {
     setNewProducts(
@@ -73,7 +88,6 @@ export default function ScheduleList({ navigation }) {
     } catch (e) {
       console.log("scheduleList.js getData() reading error ", e);
     }
-    // filterProducts();
   };
 
   const sortNewProducts = () => {
@@ -83,48 +97,56 @@ export default function ScheduleList({ navigation }) {
   };
 
   const updateDays = () => {
-    // console.log("updateDays()", days);
-    // setDays(".");
+    let newDays = [];
+
+    console.log("updateDays", newProducts);
     newProducts.map(({ day }) => {
-      if (!days.includes(day)) {
-        setDays([...days, day]);
+      if (!newDays.includes(day)) {
+        newDays.push(day);
       }
     });
 
     let indices = [6, 7, 8, 9, 3, 4, 0, 1];
-    days.sort((a, b) => {
+    newDays.sort((a, b) => {
       // let r = 0;
       return indices.find((i) => a.charCodeAt(i) - b.charCodeAt(i));
       // return r;
     });
-
+    setDays(newDays);
     // console.log(days);
   };
 
   const pressHandlerDeleteItem = (id) => {
     console.log("DELETE");
-    FetchNoData(Urls.baseUrl + `/${id}`, "DELETE");
-    forceUpdate();
-    //sprawdzic, czy dzien zawiera jeszcze jakies wyklady i go usunąć
+    setDays([]);
+    FetchNoData(Urls.baseUrl + `/${id}`, "DELETE").then(() =>
+      FetchNoData(Urls.baseUrl).then((response) => setProducts(response))
+    );
+    // forceUpdate();
   };
 
   const pressHandlerExtendLecture = (key) => {
-    console.log("EXTEND", item);
+    console.log("EXTEND", key);
   };
 
   const addScheduleListItem = (newValues, id) => {
-    FetchWithData(Urls.add, "POST", newValues);
+    setDays([]);
+    FetchWithData(Urls.add, "POST", newValues).then(() => {
+      FetchNoData(Urls.baseUrl).then((response) => setProducts(response));
+    });
     setIsModalOpen(false);
-    forceUpdate();
   };
 
   const editScheduleListItem = (newValues, id) => {
     console.log("EDIT");
+    setDays([]);
     navigation.goBack();
     FetchNoData(Urls.baseUrl + `/${id}`, "DELETE");
-    FetchWithData(Urls.add, "POST", newValues);
+    FetchWithData(Urls.add, "POST", newValues).then(() => {
+      FetchNoData(Urls.baseUrl).then((response) => setProducts(response));
+    });
 
-    forceUpdate();
+    // forceUpdate();
   };
 
   return (
@@ -164,7 +186,7 @@ export default function ScheduleList({ navigation }) {
             </View>
           </TouchableOpacity>
 
-          {updateDays()}
+          {/* {updateDays()} */}
           {sortNewProducts()}
           <View style={styles.content}>
             {days.map((propDays, index) => {
