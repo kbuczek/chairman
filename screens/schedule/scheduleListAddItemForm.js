@@ -24,6 +24,7 @@ const scheduleSchema = yup.object({
   startingHour: yup
     .number()
     .integer()
+    .required()
     .test(
       "is-num-0-24",
       "Godzina musi mieścić się w przedziale od 0 do 24",
@@ -34,6 +35,7 @@ const scheduleSchema = yup.object({
   startingMinute: yup
     .number()
     .integer()
+    .required()
     .test(
       "is-num-0-59",
       "Minuty muszą mieścić się w przedziale od 0 do 59",
@@ -44,6 +46,7 @@ const scheduleSchema = yup.object({
   endingHour: yup
     .number()
     .integer()
+    .required()
     .test(
       "is-num-0-24",
       "Godzina musi mieścić się w przedziale od 0 do 24",
@@ -54,6 +57,7 @@ const scheduleSchema = yup.object({
   endingMinute: yup
     .number()
     .integer()
+    .required()
     .test(
       "is-num-0-59",
       "Minuty muszą mieścić się w przedziale od 0 do 59",
@@ -64,6 +68,7 @@ const scheduleSchema = yup.object({
   notes: yup.string().max(400),
   alert: yup
     .number()
+    .integer()
     // .transform((value) => (isNaN(value) ? undefined : value))
     .test(
       "is-num-0-30",
@@ -83,8 +88,6 @@ export default function ScheduleListAddItemForm({
 }) {
   const [conference, setConference] = useState("");
   const [room, setRoom] = useState("");
-
-  const [selectedValue, setSelectedValue] = useState("java");
 
   useEffect(() => {
     getData();

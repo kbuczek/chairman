@@ -74,7 +74,13 @@ export default function ListItemDetails({ route, navigation }) {
                   <Text style={styles.modalCloseText}>Cofnij</Text>
                 </View>
               </TouchableOpacity>
-              <ScheduleListExtendItemForm bigTitle={"Przedłuż wykład"} />
+              <ScheduleListExtendItemForm
+                pressHandlerExtendLecture={
+                  route.params.pressHandlerExtendLecture
+                }
+                item={route.params.item}
+                bigTitle={"Przedłuż wykład"}
+              />
             </View>
           </TouchableWithoutFeedback>
         </Modal>
@@ -138,12 +144,16 @@ export default function ListItemDetails({ route, navigation }) {
             endingMinute={endingMinute}
             alert={alert}
             text={true}
+            showAlarm={true}
           />
         </Card>
         <EditButton
           text="Przedłuż wykład"
           icon="arrow-downward"
-          onPress={() => setIsModalOpenExtendLecture(true)}
+          onPress={() => {
+            setIsModalOpenExtendLecture(true);
+            // pressHandlerExtend();
+          }}
         />
         <EditButton
           text="edytuj informacje"

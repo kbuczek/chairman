@@ -14,23 +14,23 @@ import { ScrollView } from "react-native-gesture-handler";
 import CustomButton from "../../shared/customButton";
 
 const scheduleSchema = yup.object({
-  alert: yup
+  alarm: yup
     .number()
+    .integer()
     .test(
-      "is-num-0-30",
-      "Godzina musi mieścić się w przedziale od 0 do 30",
+      "is-num-1-30",
+      "Godzina musi mieścić się w przedziale od 1 do 30",
       (val) => {
-        return val >= 0 && val <= 30;
+        return val > 0 && val <= 30;
       }
     )
     .nullable(true),
 });
 
 export default function ScheduleListExtendItemForm({
-  addScheduleListItem,
+  pressHandlerExtendLecture,
   item,
   bigTitle,
-  // pressHandlerDeleteItem,
 }) {
   return (
     <ScrollView>
@@ -38,24 +38,23 @@ export default function ScheduleListExtendItemForm({
         <View style={globalStyles.cointainerWithContent}>
           <Text style={globalStyles.title}>{bigTitle}</Text>
 
-          <Text>
-            Wpisz o ile minut chcesz przedłużyć wybrany wykład i przesunąć
-            WSZYSTKIE następujące po nim wykłady o daną ilość minut tego samego
-            dnia.
-          </Text>
-
           <Formik
             initialValues={{
-              alert: "",
+              alarm: "",
             }}
             validationSchema={scheduleSchema}
             onSubmit={(values, actions) => {
               actions.resetForm();
-              addScheduleListItem(values);
+              pressHandlerExtendLecture(values.alarm, item);
             }}
           >
             {(props) => (
               <View>
+                <Text>
+                  Wpisz o ile minut chcesz przedłużyć wybrany wykład i przesunąć
+                  WSZYSTKIE następujące po nim wykłady o daną ilość minut tego
+                  samego dnia.
+                </Text>
                 <TextInput
                   style={globalStyles.input}
                   placeholder="liczba minut"

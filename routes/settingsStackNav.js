@@ -22,6 +22,9 @@ export default settingsStackNav = ({ navigation }) => {
         headerTitleStyle: {
           fontWeight: "bold",
         },
+        cardStyle: {
+          backgroundColor: "white",
+        },
       }}
     >
       <Stack.Screen

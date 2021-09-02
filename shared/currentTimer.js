@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Text, Alert } from "react-native";
 import { globalStyles } from "../styles/global";
 import AlertFunction from ".//alertFunction";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function CurrentTimer({
   title,
@@ -12,10 +13,13 @@ export default function CurrentTimer({
   endingMinute,
   alert,
   text,
+  showAlarm,
 }) {
   //   const [seconds, setSeconds] = useState(new Date().getSeconds());
   const [minutes, setMinutes] = useState(new Date().getMinutes());
   const [hours, setHours] = useState(new Date().getHours());
+  const [getDataTimeBefore, setGetDataTimeBefore] = useState(1);
+  const [getDataTimeAfter, setGetDataTimeAfter] = useState(1);
 
   const displayFrontZeros = (unit) => (unit < 10 ? `0${unit}` : unit);
 
@@ -26,14 +30,31 @@ export default function CurrentTimer({
       setHours(new Date().getHours());
     }, 55000);
 
-    // let minTimer = setInterval(() => {
-    //   setMinutes(new Date().getMinutes());
-    // }, 10000);
-
     return () => clearInterval(secTimer);
   }, []);
 
-  const alarm = () => {};
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    try {
+      const asyncGet = await AsyncStorage.getItem("savedTimeBefore");
+      if (asyncGet !== null) {
+        setGetDataTimeBefore(parseInt(asyncGet));
+      }
+    } catch (e) {
+      console.log("Settings.js getData() reading error ", e);
+    }
+    try {
+      const asyncGet = await AsyncStorage.getItem("savedTimeAfter");
+      if (asyncGet !== null) {
+        setGetDataTimeAfter(parseInt(asyncGet));
+      }
+    } catch (e) {
+      console.log("Settings.js getData() reading error ", e);
+    }
+  };
 
   const checkTime = () => {
     let date = new Date();
@@ -56,44 +77,52 @@ export default function CurrentTimer({
 
       let interval = endingTimeMinutes - startingTimeMinutes;
 
-      console.log(alert);
-      // console.log(toEndMinutesLeft);
+      // console.log(alert);
+      // console.log();
       if (
         parseInt(alert) &&
         parseInt(alert) < interval &&
         parseInt(alert) === toEndMinutesLeft
       ) {
         console.log("Alert 3");
-        AlertFunction(3, title);
+        if (showAlarm) {
+          AlertFunction(3, title);
+        }
       }
 
-      if (toStartMinutesLeft <= 90 && toStartMinutesLeft >= 0) {
+      if (toStartMinutesLeft <= getDataTimeBefore && toStartMinutesLeft >= 0) {
         let thisHour = Math.floor(toStartMinutesLeft / 60);
         let thisMinute = toStartMinutesLeft - thisHour * 60;
-        if (thisHour === 0 && thisMinute === 0) {
-          console.log("Alert 1");
-          AlertFunction(1, title);
+        if (showAlarm) {
+          if (thisHour === 0 && thisMinute === 0) {
+            console.log("Alert 1");
+            AlertFunction(1, title);
+          }
         }
+
         return (
           <Text style={styles.starting}>
             {text && "Do rozpoczęcia pozostało: "}- {thisHour} godzin{", "}
             {thisMinute} minut
           </Text>
         );
-      } else if (toEndMinutesLeft <= 90 && toEndMinutesLeft >= 0) {
+      } else if (toEndMinutesLeft <= interval && toEndMinutesLeft >= 0) {
         let thisHour = Math.floor(toEndMinutesLeft / 60);
         let thisMinute = toEndMinutesLeft - thisHour * 60;
-        if (thisHour === 0 && thisMinute === 0) {
-          console.log("Alert 2");
-          AlertFunction(2, title);
+        if (showAlarm) {
+          if (thisHour === 0 && thisMinute === 0) {
+            console.log("Alert 2");
+            AlertFunction(2, title);
+          }
         }
+
         return (
           <Text style={styles.ending}>
             {text && "Do zakończenia pozostało: "} {thisHour} godzin{", "}
             {thisMinute} minut
           </Text>
         );
-      } else if (overtimeMinutes <= 15 && overtimeMinutes > 0) {
+      } else if (overtimeMinutes <= getDataTimeAfter && overtimeMinutes > 0) {
         let thisHour = Math.floor(overtimeMinutes / 60);
         let thisMinute = overtimeMinutes - thisHour * 60;
         return (

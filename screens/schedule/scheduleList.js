@@ -49,7 +49,7 @@ export default function ScheduleList({ navigation }) {
     // setProducts(FetchNoData(Urls.baseUrl));
     FetchNoData(Urls.baseUrl).then((response) => setProducts(response));
     getData();
-    console.log("here");
+    console.log(days);
     // updateDays();
   }, []);
 
@@ -59,8 +59,9 @@ export default function ScheduleList({ navigation }) {
 
   useEffect(() => {
     updateDays();
-    console.log("NEWPRODUSSSSSS", newProducts);
-    console.log("DAYS", days);
+    // console.log("NEWPRODUSSSSSS", newProducts);
+    // console.log("DAYS", days);
+    sortNewProducts();
   }, [newProducts]);
 
   const filterProducts = () => {
@@ -99,18 +100,17 @@ export default function ScheduleList({ navigation }) {
   const updateDays = () => {
     let newDays = [];
 
-    console.log("updateDays", newProducts);
+    // console.log("updateDays", newProducts);
     newProducts.map(({ day }) => {
       if (!newDays.includes(day)) {
         newDays.push(day);
       }
     });
 
-    let indices = [6, 7, 8, 9, 3, 4, 0, 1];
     newDays.sort((a, b) => {
-      // let r = 0;
-      return indices.find((i) => a.charCodeAt(i) - b.charCodeAt(i));
-      // return r;
+      let aa = a.split("-").reverse().join(),
+        bb = b.split("-").reverse().join();
+      return aa < bb ? -1 : aa > bb ? 1 : 0;
     });
     setDays(newDays);
     // console.log(days);
@@ -125,8 +125,69 @@ export default function ScheduleList({ navigation }) {
     // forceUpdate();
   };
 
-  const pressHandlerExtendLecture = (key) => {
-    console.log("EXTEND", key);
+  const pressHandlerExtendLecture = (value, item) => {
+    console.log("EXTEND THIS", value);
+    console.log("item id", item);
+    // item.
+    navigation.goBack();
+
+    const itemNewStartingMinute =
+      parseInt(item.startingMinute) + parseInt(value);
+    if (itemNewStartingMinute < 60) {
+      item.startingMinute = itemNewStartingMinute;
+    } else {
+      item.startingHour = parseInt(item.startingHour) + 1;
+      item.startingMinute = itemNewStartingMinute - 60;
+    }
+
+    const itemNewEndingMinute = parseInt(item.endingMinute) + parseInt(value);
+    if (itemNewEndingMinute < 60) {
+      item.endingMinute = itemNewEndingMinute;
+    } else {
+      item.endingHour = parseInt(item.endingHour) + 1;
+      item.endingMinute = itemNewEndingMinute - 60;
+    }
+
+    FetchWithData(Urls.baseUrl + `/update/${item._id}`, "POST", item).then(
+      () => {
+        FetchNoData(Urls.baseUrl).then((response) => setProducts(response));
+      }
+    );
+
+    newProducts.map((e) => {
+      if (e.day === item.day) {
+        if (
+          e.startingHour > item.startingHour ||
+          (e.startingHour === item.startingHour &&
+            e.startingMinute > item.startingMinute)
+        ) {
+          const eNewStartingMinute =
+            parseInt(e.startingMinute) + parseInt(value);
+          if (eNewStartingMinute < 60) {
+            e.startingMinute = eNewStartingMinute;
+          } else {
+            e.startingHour = parseInt(e.startingHour) + 1;
+            e.startingMinute = eNewStartingMinute - 60;
+          }
+
+          const eNewEndingMinute = parseInt(e.endingMinute) + parseInt(value);
+          if (eNewEndingMinute < 60) {
+            e.endingMinute = eNewEndingMinute;
+          } else {
+            e.endingHour = parseInt(e.endingHour) + 1;
+            e.endingMinute = eNewEndingMinute - 60;
+          }
+
+          FetchWithData(Urls.baseUrl + `/update/${e._id}`, "POST", e).then(
+            () => {
+              FetchNoData(Urls.baseUrl).then((response) =>
+                setProducts(response)
+              );
+            }
+          );
+        }
+      }
+    });
   };
 
   const addScheduleListItem = (newValues, id) => {
@@ -141,12 +202,15 @@ export default function ScheduleList({ navigation }) {
     console.log("EDIT");
     setDays([]);
     navigation.goBack();
-    FetchNoData(Urls.baseUrl + `/${id}`, "DELETE");
-    FetchWithData(Urls.add, "POST", newValues).then(() => {
-      FetchNoData(Urls.baseUrl).then((response) => setProducts(response));
-    });
-
-    // forceUpdate();
+    // FetchNoData(Urls.baseUrl + `/${id}`, "DELETE");
+    // FetchWithData(Urls.add, "POST", newValues).then(() => {
+    //   FetchNoData(Urls.baseUrl).then((response) => setProducts(response));
+    // });
+    FetchWithData(Urls.baseUrl + `/update/${id}`, "POST", newValues).then(
+      () => {
+        FetchNoData(Urls.baseUrl).then((response) => setProducts(response));
+      }
+    );
   };
 
   return (
@@ -186,35 +250,52 @@ export default function ScheduleList({ navigation }) {
             </View>
           </TouchableOpacity>
 
-          {/* {updateDays()} */}
-          {sortNewProducts()}
+          {/* {sortNewProducts()} */}
           <View style={styles.content}>
-            {days.map((propDays, index) => {
-              return (
-                <View key={Math.random() * 1000}>
-                  <Text style={styles.date}>{convertDate(propDays)}</Text>
-                  {newProducts.map((item) => {
-                    if (item.day === propDays) {
-                      return (
-                        <View key={item._id}>
-                          <ScheduleListItem
-                            item={item}
-                            pressHandler={() =>
-                              navigation.navigate("ListItemDetails", {
-                                item,
-                                pressHandlerDeleteItem,
-                                pressHandlerExtendLecture,
-                                editScheduleListItem,
-                              })
-                            }
-                          />
-                        </View>
-                      );
-                    }
-                  })}
-                </View>
-              );
-            })}
+            {days.length === 0 ? (
+              <View>
+                <Text style={styles.message}>
+                  Brak wykładów. Dodawanie pierwszego wykładu:
+                </Text>
+                <Text style={styles.message}>
+                  1. Przejdź do zakładki "Ustawienia".
+                </Text>
+                <Text style={styles.message}>
+                  2. Dodaj nazwę twojej KONFERENCJI oraz nazwę twojej SALI.
+                </Text>
+                <Text style={styles.message}>
+                  3. Po wykonaniu punktów 1. i 2. możesz tutaj dodawać twoje
+                  wykłady.
+                </Text>
+              </View>
+            ) : (
+              days.map((propDays, index) => {
+                return (
+                  <View key={Math.random() * 1000}>
+                    <Text style={styles.date}>{convertDate(propDays)}</Text>
+                    {newProducts.map((item) => {
+                      if (item.day === propDays) {
+                        return (
+                          <View key={item._id}>
+                            <ScheduleListItem
+                              item={item}
+                              pressHandler={() =>
+                                navigation.navigate("ListItemDetails", {
+                                  item,
+                                  pressHandlerDeleteItem,
+                                  pressHandlerExtendLecture,
+                                  editScheduleListItem,
+                                })
+                              }
+                            />
+                          </View>
+                        );
+                      }
+                    })}
+                  </View>
+                );
+              })
+            )}
           </View>
         </View>
       </ScrollView>
@@ -265,5 +346,10 @@ const styles = StyleSheet.create({
     marginBottom: 0,
     paddingBottom: 0,
     fontSize: 24,
+  },
+  message: {
+    fontSize: 15,
+    marginTop: 5,
+    color: "gray",
   },
 });

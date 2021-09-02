@@ -17,11 +17,35 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const settingsSchema = yup.object({
   savedConference: yup.string().required().max(40),
   savedRoom: yup.string().required().max(40),
+  savedTimeBefore: yup
+    .number()
+    .integer()
+    .required()
+    .test(
+      "is-num-0-180",
+      "Minuty muszą mieścić się w przedziale od 0 do 180",
+      (val) => {
+        return val >= 0 && val <= 59;
+      }
+    ),
+  savedTimeAfter: yup
+    .number()
+    .integer()
+    .required()
+    .test(
+      "is-num-0-180",
+      "Minuty muszą mieścić się w przedziale od 0 do 180",
+      (val) => {
+        return val >= 0 && val <= 59;
+      }
+    ),
 });
 
 export default function Settings() {
   const [conference, setConference] = useState("");
   const [room, setRoom] = useState("");
+  const [timeBefore, setTimeBefore] = useState("");
+  const [timeAfter, setTimeAfter] = useState("");
 
   useEffect(() => {
     getData();
@@ -31,6 +55,8 @@ export default function Settings() {
     try {
       await AsyncStorage.setItem("savedConference", values.savedConference);
       await AsyncStorage.setItem("savedRoom", values.savedRoom);
+      await AsyncStorage.setItem("savedTimeBefore", values.savedTimeBefore);
+      await AsyncStorage.setItem("savedTimeAfter", values.savedTimeAfter);
     } catch (e) {
       console.log("Settings.js storeData() saving error ", e);
     }
@@ -53,6 +79,22 @@ export default function Settings() {
     } catch (e) {
       console.log("Settings.js getData() reading error ", e);
     }
+    try {
+      const getDataTimeBefore = await AsyncStorage.getItem("savedTimeBefore");
+      if (getDataTimeBefore !== null) {
+        setTimeBefore(getDataTimeBefore);
+      }
+    } catch (e) {
+      console.log("Settings.js getData() reading error ", e);
+    }
+    try {
+      const getDataTimeAfter = await AsyncStorage.getItem("savedTimeAfter");
+      if (getDataTimeAfter !== null) {
+        setTimeAfter(getDataTimeAfter);
+      }
+    } catch (e) {
+      console.log("Settings.js getData() reading error ", e);
+    }
   };
 
   return (
@@ -63,6 +105,8 @@ export default function Settings() {
             initialValues={{
               savedConference: conference,
               savedRoom: room,
+              savedTimeBefore: timeBefore,
+              savedTimeAfter: timeAfter,
             }}
             validationSchema={settingsSchema}
             enableReinitialize={true}
@@ -103,6 +147,41 @@ export default function Settings() {
                 />
                 <Text style={globalStyles.errorText}>
                   {props.touched.savedRoom && props.errors.savedRoom}
+                </Text>
+
+                <View
+                  style={{
+                    borderBottomColor: "lightgray",
+                    borderBottomWidth: 1,
+                    marginBottom: 30,
+                  }}
+                />
+
+                <Text>Pokazuj czas do rozpoczęcia wykładu</Text>
+                <TextInput
+                  style={globalStyles.input}
+                  placeholder="wpisz ilość minut"
+                  placeholderTextColor="gray"
+                  onChangeText={props.handleChange("savedTimeBefore")}
+                  value={props.values.savedTimeBefore}
+                  onBlur={props.handleBlur("savedTimeBefore")}
+                />
+                <Text style={globalStyles.errorText}>
+                  {props.touched.savedTimeBefore &&
+                    props.errors.savedTimeBefore}
+                </Text>
+
+                <Text>Pokazuj czas po zakończeniu wykładu</Text>
+                <TextInput
+                  style={globalStyles.input}
+                  placeholder="wpisz ilość minut"
+                  placeholderTextColor="gray"
+                  onChangeText={props.handleChange("savedTimeAfter")}
+                  value={props.values.savedTimeAfter}
+                  onBlur={props.handleBlur("savedTimeAfter")}
+                />
+                <Text style={globalStyles.errorText}>
+                  {props.touched.savedTimeAfter && props.errors.savedTimeAfter}
                 </Text>
 
                 <CustomButton
