@@ -20,11 +20,14 @@ import { ScrollView } from "react-native-gesture-handler";
 import CurrentTimer from "../../shared/currentTimer";
 import ScheduleListAddItemForm from "./scheduleListAddItemForm";
 import ScheduleListExtendItemForm from "./scheduleListExtendItemForm";
+import ScheduleListChangeWithForm from "./scheduleListChangeWithForm";
 import convertDate from "../../shared/convertDate";
 
 export default function ListItemDetails({ route, navigation }) {
   const [dt, setDt] = useState(new Date().toLocaleString());
   const [isModalOpenExtendLecture, setIsModalOpenExtendLecture] =
+    useState(false);
+  const [isModalOpenChangeWithLecture, setIsModalOpenChangeWithLecture] =
     useState(false);
   const [isModalOpenEdit, setIsModalOpenEdit] = useState(false);
   const {
@@ -80,6 +83,32 @@ export default function ListItemDetails({ route, navigation }) {
                 }
                 item={route.params.item}
                 bigTitle={"Przedłuż wykład"}
+              />
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
+
+        <Modal visible={isModalOpenChangeWithLecture} animationType="slide">
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={globalStyles.modalContent}>
+              <TouchableOpacity
+                onPress={() => setIsModalOpenChangeWithLecture(false)}
+              >
+                <View style={globalStyles.row}>
+                  <MaterialIcons
+                    name="chevron-left"
+                    size={24}
+                    style={styles.modalClose}
+                  />
+                  <Text style={styles.modalCloseText}>Cofnij</Text>
+                </View>
+              </TouchableOpacity>
+              <ScheduleListChangeWithForm
+                pressHandlerChangeWithLecture={
+                  route.params.pressHandlerChangeWithLecture
+                }
+                item={route.params.item}
+                bigTitle={"Zamień czas trwania wybranego wykładu z innym"}
               />
             </View>
           </TouchableWithoutFeedback>
@@ -148,17 +177,25 @@ export default function ListItemDetails({ route, navigation }) {
           />
         </Card>
         <EditButton
+          text="edytuj informacje"
+          icon="create"
+          onPress={() => setIsModalOpenEdit(true)}
+        />
+        <EditButton
           text="Przedłuż wykład"
-          icon="arrow-downward"
+          icon="more-time"
           onPress={() => {
             setIsModalOpenExtendLecture(true);
             // pressHandlerExtend();
           }}
         />
         <EditButton
-          text="edytuj informacje"
-          icon="create"
-          onPress={() => setIsModalOpenEdit(true)}
+          text="Zamień z innym"
+          icon="compare-arrows"
+          onPress={() => {
+            setIsModalOpenChangeWithLecture(true);
+            // pressHandlerExtend();
+          }}
         />
         <DeleteButton text="usuń" onPress={pressHandler1} />
       </ScrollView>

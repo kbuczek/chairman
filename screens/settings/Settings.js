@@ -5,6 +5,7 @@ import {
   View,
   Text,
   TouchableWithoutFeedback,
+  TouchableOpacity,
   Alert,
 } from "react-native";
 import { globalStyles } from "../../styles/global";
@@ -13,6 +14,7 @@ import * as yup from "yup";
 import { ScrollView } from "react-native-gesture-handler";
 import CustomButton from "../../shared/customButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Autocomplete from "react-native-autocomplete-input";
 
 const settingsSchema = yup.object({
   savedConference: yup.string().required().max(40),
@@ -131,6 +133,24 @@ export default function Settings() {
                   value={props.values.savedConference}
                   onBlur={props.handleBlur("savedConference")}
                 />
+                {/* <Autocomplete
+                  data={items}
+                  value={props.values.savedConference}
+                  onChangeText={props.handleChange("savedConference")}
+                  flatListProps={{
+                    keyExtractor: (_, idx) => idx,
+                    renderItem: ({ item }) => (
+                      <TouchableOpacity
+                        onPress={
+                          (props.handleChange("savedConference"),
+                          (props.values.savedConference = item.name))
+                        }
+                      >
+                        <Text>{item.name}</Text>
+                      </TouchableOpacity>
+                    ),
+                  }}
+                /> */}
                 <Text style={globalStyles.errorText}>
                   {props.touched.savedConference &&
                     props.errors.savedConference}

@@ -190,6 +190,11 @@ export default function ScheduleList({ navigation }) {
     });
   };
 
+  const pressHandlerChangeWithLecture = (day, hour, minute, item) => {
+    console.log("CHANGE WITH", day, hour, minute, item);
+    navigation.goBack();
+  };
+
   const addScheduleListItem = (newValues, id) => {
     setDays([]);
     FetchWithData(Urls.add, "POST", newValues).then(() => {
@@ -250,7 +255,6 @@ export default function ScheduleList({ navigation }) {
             </View>
           </TouchableOpacity>
 
-          {/* {sortNewProducts()} */}
           <View style={styles.content}>
             {days.length === 0 ? (
               <View>
@@ -284,6 +288,7 @@ export default function ScheduleList({ navigation }) {
                                   item,
                                   pressHandlerDeleteItem,
                                   pressHandlerExtendLecture,
+                                  pressHandlerChangeWithLecture,
                                   editScheduleListItem,
                                 })
                               }
