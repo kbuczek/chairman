@@ -190,9 +190,47 @@ export default function ScheduleList({ navigation }) {
     });
   };
 
-  const pressHandlerChangeWithLecture = (day, hour, minute, item) => {
-    console.log("CHANGE WITH", day, hour, minute, item);
+  const pressHandlerChangeWithLecture = (
+    thisDay,
+    thisHour,
+    thisMinute,
+    item
+  ) => {
+    console.log("CHANGE WITH");
     navigation.goBack();
+
+    newProducts.map((e) => {
+      if (
+        e.day === thisDay &&
+        e.startingHour === thisHour &&
+        e.startingMinute === thisMinute
+      ) {
+        const tempEndingHour = e.endingHour;
+        const tempEndingMinute = e.endingMinute;
+
+        e.day = item.day;
+        e.startingHour = item.startingHour;
+        e.startingMinute = item.startingMinute;
+        e.endingHour = item.endingHour;
+        e.endingMinute = item.endingMinute;
+
+        FetchWithData(Urls.baseUrl + `/update/${e._id}`, "POST", e).then(() => {
+          FetchNoData(Urls.baseUrl).then((response) => setProducts(response));
+        });
+
+        item.day = thisDay;
+        item.startingHour = thisHour;
+        item.startingMinute = thisMinute;
+        item.endingHour = tempEndingHour;
+        item.endingMinute = tempEndingMinute;
+
+        FetchWithData(Urls.baseUrl + `/update/${item._id}`, "POST", item).then(
+          () => {
+            FetchNoData(Urls.baseUrl).then((response) => setProducts(response));
+          }
+        );
+      }
+    });
   };
 
   const addScheduleListItem = (newValues, id) => {
