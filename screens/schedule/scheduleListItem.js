@@ -29,7 +29,7 @@ export default function ScheduleListItem({ item, pressHandler }) {
             endingMinute={item.endingMinute}
             alert={item.alert}
             text={false}
-            showAlarm={true}
+            showAlarm={false}
           />
         </View>
       </View>

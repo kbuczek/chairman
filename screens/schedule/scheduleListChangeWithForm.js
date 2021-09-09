@@ -97,7 +97,7 @@ export default function ScheduleListChangeWithItemForm({
                 <Text style={globalStyles.errorText}>
                   {props.touched.startingHour && props.errors.startingHour}
                 </Text>
-                <Text>Minutę rozpoczęcia:</Text>
+                <Text>Minuta rozpoczęcia:</Text>
                 <TextInput
                   style={globalStyles.input}
                   placeholder="minuty"

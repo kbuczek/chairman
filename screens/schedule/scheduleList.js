@@ -24,6 +24,8 @@ import FetchNoData from "../../shared/Api/fetchNoData";
 import Urls from "../../shared/Api/urls";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { set } from "react-native-reanimated";
+import notification from "../../shared/notification";
+import * as Notifications from "expo-notifications";
 
 export default function ScheduleList({ navigation }) {
   // let { loading, products } = useFetch(Urls.baseUrl);
@@ -115,6 +117,10 @@ export default function ScheduleList({ navigation }) {
     setDays(newDays);
     // console.log(days);
   };
+
+  // const cancelAllNotifications = async () => {
+  //   await Notifications.cancelAllScheduledNotificationAsync();
+  // };
 
   const pressHandlerDeleteItem = (id) => {
     console.log("DELETE");
@@ -321,15 +327,16 @@ export default function ScheduleList({ navigation }) {
                           <View key={item._id}>
                             <ScheduleListItem
                               item={item}
-                              pressHandler={() =>
-                                navigation.navigate("ListItemDetails", {
-                                  item,
-                                  pressHandlerDeleteItem,
-                                  pressHandlerExtendLecture,
-                                  pressHandlerChangeWithLecture,
-                                  editScheduleListItem,
-                                })
-                              }
+                              pressHandler={() => {
+                                notification(),
+                                  navigation.navigate("ListItemDetails", {
+                                    item,
+                                    pressHandlerDeleteItem,
+                                    pressHandlerExtendLecture,
+                                    pressHandlerChangeWithLecture,
+                                    editScheduleListItem,
+                                  });
+                              }}
                             />
                           </View>
                         );
