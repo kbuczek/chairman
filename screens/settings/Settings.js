@@ -53,6 +53,20 @@ export default function Settings() {
     getData();
   }, []);
 
+  const items = [
+    //name key is must.It is to show the text in front
+    { id: 1, name: "angellist" },
+    { id: 2, name: "codepen" },
+    { id: 3, name: "envelope" },
+    { id: 4, name: "etsy" },
+    { id: 5, name: "facebook" },
+    { id: 6, name: "foursquare" },
+    { id: 7, name: "github-alt" },
+    { id: 8, name: "github" },
+    { id: 9, name: "gitlab" },
+    { id: 10, name: "instagram" },
+  ];
+
   const storeData = async (values) => {
     try {
       await AsyncStorage.setItem("savedConference", values.savedConference);
@@ -133,23 +147,37 @@ export default function Settings() {
                   value={props.values.savedConference}
                   onBlur={props.handleBlur("savedConference")}
                 />
-                {/* <Autocomplete
-                  data={items}
-                  value={props.values.savedConference}
-                  onChangeText={props.handleChange("savedConference")}
-                  flatListProps={{
-                    keyExtractor: (_, idx) => idx,
-                    renderItem: ({ item }) => (
-                      <TouchableOpacity
-                        onPress={
-                          (props.handleChange("savedConference"),
-                          (props.values.savedConference = item.name))
-                        }
-                      >
-                        <Text>{item.name}</Text>
-                      </TouchableOpacity>
-                    ),
-                  }}
+                {/* <View style={styles.autocompleteContainer}>
+                  <Autocomplete
+                    data={items}
+                    value={props.values.savedConference}
+                    onChangeText={props.handleChange("savedConference")}
+                    flatListProps={{
+                      keyExtractor: (_, idx) => idx,
+                      renderItem: ({ item }) => (
+                        <TouchableOpacity
+                          onPress={
+                            (props.handleChange("savedConference"),
+                            (props.values.savedConference = item.name))
+                          }
+                        >
+                          <Text>{item.name}</Text>
+                        </TouchableOpacity>
+                      ),
+                    }}
+                  />
+                </View> */}
+                {/* <AutocompleteDropdown
+                  clearOnFocus={false}
+                  closeOnBlur={true}
+                  closeOnSubmit={false}
+                  initialValue={{ id: "2" }} // or just '2'
+                  onSelectItem={setSelectedItem}
+                  dataSet={[
+                    { id: "1", title: "Alpha" },
+                    { id: "2", title: "Beta" },
+                    { id: "3", title: "Gamma" },
+                  ]}
                 /> */}
                 <Text style={globalStyles.errorText}>
                   {props.touched.savedConference &&
