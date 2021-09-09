@@ -23,9 +23,10 @@ import FetchWithData from "../../shared/Api/fetchWithData";
 import FetchNoData from "../../shared/Api/fetchNoData";
 import Urls from "../../shared/Api/urls";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { set } from "react-native-reanimated";
+import { add, set } from "react-native-reanimated";
 import notification from "../../shared/notification";
 import * as Notifications from "expo-notifications";
+import displayFrontZeros from "../../shared/displayFrontZeros";
 
 export default function ScheduleList({ navigation }) {
   // let { loading, products } = useFetch(Urls.baseUrl);
@@ -48,11 +49,8 @@ export default function ScheduleList({ navigation }) {
   }, [navigation]);
 
   useEffect(() => {
-    // setProducts(FetchNoData(Urls.baseUrl));
     FetchNoData(Urls.baseUrl).then((response) => setProducts(response));
     getData();
-    console.log(days);
-    // updateDays();
   }, []);
 
   useEffect(() => {
@@ -61,9 +59,8 @@ export default function ScheduleList({ navigation }) {
 
   useEffect(() => {
     updateDays();
-    // console.log("NEWPRODUSSSSSS", newProducts);
-    // console.log("DAYS", days);
     sortNewProducts();
+    addAllNotifications();
   }, [newProducts]);
 
   const filterProducts = () => {
@@ -95,7 +92,9 @@ export default function ScheduleList({ navigation }) {
 
   const sortNewProducts = () => {
     newProducts.sort(
-      (a, b) => parseInt(a.startingHour) - parseInt(b.startingHour)
+      (a, b) =>
+        parseInt(a.startingHour) - parseInt(b.startingHour) ||
+        parseInt(a.startingMinute) - parseInt(b.startingMinute)
     );
   };
 
@@ -118,9 +117,68 @@ export default function ScheduleList({ navigation }) {
     // console.log(days);
   };
 
-  // const cancelAllNotifications = async () => {
-  //   await Notifications.cancelAllScheduledNotificationAsync();
-  // };
+  const addAllNotifications = () => {
+    console.log("add all notifications");
+    Notifications.cancelAllScheduledNotificationsAsync();
+
+    let date = new Date();
+    let todayDate =
+      displayFrontZeros(date.getDate()) +
+      "-" +
+      displayFrontZeros(date.getMonth() + 1) +
+      "-" +
+      date.getFullYear();
+
+    newProducts.map(
+      ({
+        title,
+        day,
+        startingHour,
+        startingMinute,
+        endingHour,
+        endingMinute,
+        alert,
+      }) => {
+        if (day === todayDate) {
+          console.log(todayDate);
+          const currentHour = date.getHours();
+          const currentMinute = date.getMinutes();
+          if (
+            parseInt(startingHour) >= currentHour &&
+            parseInt(startingMinute) >= currentMinute
+          ) {
+            console.log("STARTing");
+            const notificationSeconds =
+              (parseInt(startingHour) - currentHour) * 3600 +
+              (parseInt(startingMinute) - currentMinute) * 60;
+
+            notification("Rozpocznij wykład", title, notificationSeconds - 30);
+          }
+
+          if (
+            parseInt(endingHour) >= currentHour &&
+            parseInt(endingMinute) >= currentMinute
+          ) {
+            console.log("ENDING");
+            const notificationSeconds =
+              (parseInt(endingHour) - currentHour) * 3600 +
+              (parseInt(endingMinute) - currentMinute) * 60;
+
+            notification("Zakończ wykład", title, notificationSeconds - 30);
+
+            if (alert > 0 && notificationSeconds - alert * 60 > 0) {
+              console.log("ALERT");
+              notification(
+                "ALERT",
+                "Alert wykładu " + title,
+                notificationSeconds - alert * 60 - 30
+              );
+            }
+          }
+        }
+      }
+    );
+  };
 
   const pressHandlerDeleteItem = (id) => {
     console.log("DELETE");
@@ -328,14 +386,15 @@ export default function ScheduleList({ navigation }) {
                             <ScheduleListItem
                               item={item}
                               pressHandler={() => {
-                                notification(),
-                                  navigation.navigate("ListItemDetails", {
-                                    item,
-                                    pressHandlerDeleteItem,
-                                    pressHandlerExtendLecture,
-                                    pressHandlerChangeWithLecture,
-                                    editScheduleListItem,
-                                  });
+                                // notification("AAA", "BBB", 10),
+                                // Notifications.cancelAllScheduledNotificationsAsync(),
+                                navigation.navigate("ListItemDetails", {
+                                  item,
+                                  pressHandlerDeleteItem,
+                                  pressHandlerExtendLecture,
+                                  pressHandlerChangeWithLecture,
+                                  editScheduleListItem,
+                                });
                               }}
                             />
                           </View>

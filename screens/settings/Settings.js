@@ -25,7 +25,7 @@ const settingsSchema = yup.object({
     .required()
     .test(
       "is-num-0-180",
-      "Minuty muszą mieścić się w przedziale od 0 do 180",
+      "Minuty muszą mieścić się w przedziale od 0 do 60",
       (val) => {
         return val >= 0 && val <= 59;
       }
@@ -36,7 +36,7 @@ const settingsSchema = yup.object({
     .required()
     .test(
       "is-num-0-180",
-      "Minuty muszą mieścić się w przedziale od 0 do 180",
+      "Minuty muszą mieścić się w przedziale od 0 do 60",
       (val) => {
         return val >= 0 && val <= 59;
       }

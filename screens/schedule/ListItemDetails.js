@@ -173,7 +173,7 @@ export default function ListItemDetails({ route, navigation }) {
             endingMinute={endingMinute}
             alert={alert}
             text={true}
-            showAlarm={true}
+            showAlarm={false}
           />
         </Card>
         <EditButton

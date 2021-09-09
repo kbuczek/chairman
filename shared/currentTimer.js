@@ -28,7 +28,7 @@ export default function CurrentTimer({
       //   setSeconds(new Date().getSeconds());
       setMinutes(new Date().getMinutes());
       setHours(new Date().getHours());
-    }, 55000);
+    }, 10000);
 
     return () => clearInterval(secTimer);
   }, []);
@@ -102,8 +102,7 @@ export default function CurrentTimer({
 
         return (
           <Text style={styles.starting}>
-            {text && "Do rozpoczęcia pozostało: "}- {thisHour} godzin{", "}
-            {thisMinute} minut
+            {text && "Do rozpoczęcia pozostało: "}- {thisMinute} minut
           </Text>
         );
       } else if (toEndMinutesLeft <= interval && toEndMinutesLeft >= 0) {
@@ -118,7 +117,7 @@ export default function CurrentTimer({
 
         return (
           <Text style={styles.ending}>
-            {text && "Do zakończenia pozostało: "} {thisHour} godzin{", "}
+            {text && "Do zakończenia pozostało: "}
             {thisMinute} minut
           </Text>
         );
@@ -127,8 +126,7 @@ export default function CurrentTimer({
         let thisMinute = overtimeMinutes - thisHour * 60;
         return (
           <Text style={styles.overtime}>
-            {text && "Po czasie: "}+ {thisHour} godzin{", "}
-            {thisMinute} minut
+            {text && "Po czasie: "} +{thisMinute} minut
           </Text>
         );
       }

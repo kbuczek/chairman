@@ -1,8 +1,10 @@
 import * as Notification from "expo-notifications";
 
-const handleNotification = () => {
-  console.log("notification");
-
+const handleNotification = (
+  titleText = "Brak tytułu notyfikacji",
+  bodyText = "Brak treści notyfikacji",
+  secondsToDisplay
+) => {
   Notification.setNotificationHandler({
     handleNotification: async () => {
       return {
@@ -14,14 +16,12 @@ const handleNotification = () => {
 
   Notification.scheduleNotificationAsync({
     content: {
-      title: "Rozpocznij wykład",
-      body: "Wszystko o falach grawitacyjnych",
+      title: titleText,
+      body: bodyText,
     },
     trigger: {
-      // hour: 10,
-      // minute: 42,
-      // repeats: false,
-      seconds: 5,
+      seconds: secondsToDisplay,
+      repeats: false,
     },
   });
 };
