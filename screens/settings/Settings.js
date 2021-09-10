@@ -14,7 +14,8 @@ import * as yup from "yup";
 import { ScrollView } from "react-native-gesture-handler";
 import CustomButton from "../../shared/customButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Autocomplete from "react-native-autocomplete-input";
+import { Picker } from "@react-native-picker/picker";
+// import AppContext from "../../shared/AppContext";
 
 const settingsSchema = yup.object({
   savedConference: yup.string().required().max(40),
@@ -48,24 +49,11 @@ export default function Settings() {
   const [room, setRoom] = useState("");
   const [timeBefore, setTimeBefore] = useState("");
   const [timeAfter, setTimeAfter] = useState("");
+  // const globalConferencesContext = useContext(AppContext);
 
   useEffect(() => {
     getData();
   }, []);
-
-  const items = [
-    //name key is must.It is to show the text in front
-    { id: 1, name: "angellist" },
-    { id: 2, name: "codepen" },
-    { id: 3, name: "envelope" },
-    { id: 4, name: "etsy" },
-    { id: 5, name: "facebook" },
-    { id: 6, name: "foursquare" },
-    { id: 7, name: "github-alt" },
-    { id: 8, name: "github" },
-    { id: 9, name: "gitlab" },
-    { id: 10, name: "instagram" },
-  ];
 
   const storeData = async (values) => {
     try {
@@ -139,50 +127,45 @@ export default function Settings() {
             {(props) => (
               <View style={globalStyles.container}>
                 <Text>Twoja konferencja</Text>
-                <TextInput
+                <View
+                  style={{
+                    borderColor: "lightgray",
+                    borderRadius: 3,
+                    borderWidth: 1,
+                    marginBottom: 20,
+                  }}
+                >
+                  <Picker
+                    style={{ height: 50, width: 360 }}
+                    mode="dropdown"
+                    prompt={"Select language"}
+                    itemStyle={{ backgroundColor: "gray" }}
+                    selectedValue={props.values.savedConference}
+                    onValueChange={props.handleChange("savedConference")}
+                  >
+                    <Picker.Item
+                      label="konferencja-fizyka-2021"
+                      value="konferencja-fizyka-2021"
+                    />
+                    <Picker.Item label="fizyka2021" value="fizyka2021" />
+                    <Picker.Item label="geografia-uj" value="geografia-uj" />
+                    {/* {globalConferencesContext.array.map((item) => {
+                      return <Picker.Item label={item} value={item} />;
+                    })} */}
+                  </Picker>
+                </View>
+                {/* <TextInput
                   style={globalStyles.input}
                   placeholder="wpisz nazwę twojej konferencji"
                   placeholderTextColor="gray"
                   onChangeText={props.handleChange("savedConference")}
                   value={props.values.savedConference}
                   onBlur={props.handleBlur("savedConference")}
-                />
-                {/* <View style={styles.autocompleteContainer}>
-                  <Autocomplete
-                    data={items}
-                    value={props.values.savedConference}
-                    onChangeText={props.handleChange("savedConference")}
-                    flatListProps={{
-                      keyExtractor: (_, idx) => idx,
-                      renderItem: ({ item }) => (
-                        <TouchableOpacity
-                          onPress={
-                            (props.handleChange("savedConference"),
-                            (props.values.savedConference = item.name))
-                          }
-                        >
-                          <Text>{item.name}</Text>
-                        </TouchableOpacity>
-                      ),
-                    }}
-                  />
-                </View> */}
-                {/* <AutocompleteDropdown
-                  clearOnFocus={false}
-                  closeOnBlur={true}
-                  closeOnSubmit={false}
-                  initialValue={{ id: "2" }} // or just '2'
-                  onSelectItem={setSelectedItem}
-                  dataSet={[
-                    { id: "1", title: "Alpha" },
-                    { id: "2", title: "Beta" },
-                    { id: "3", title: "Gamma" },
-                  ]}
                 /> */}
-                <Text style={globalStyles.errorText}>
+                {/* <Text style={globalStyles.errorText}>
                   {props.touched.savedConference &&
                     props.errors.savedConference}
-                </Text>
+                </Text> */}
 
                 <Text>Twoja sala</Text>
                 <TextInput

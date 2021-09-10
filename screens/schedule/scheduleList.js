@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -27,6 +27,7 @@ import { add, set } from "react-native-reanimated";
 import notification from "../../shared/notification";
 import * as Notifications from "expo-notifications";
 import displayFrontZeros from "../../shared/displayFrontZeros";
+import AppContext from "../../shared/AppContext";
 
 export default function ScheduleList({ navigation }) {
   // let { loading, products } = useFetch(Urls.baseUrl);
@@ -35,8 +36,10 @@ export default function ScheduleList({ navigation }) {
   const [products, setProducts] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newProducts, setNewProducts] = useState([]);
-  const [conference, setConference] = useState("");
-  const [room, setRoom] = useState("");
+  const [myConference, setMyConference] = useState("");
+  const [myRoom, setMyRoom] = useState("");
+  const [conferencesList, setConferencesList] = useState([]);
+  const globalConferencesContext = useContext(AppContext);
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
@@ -61,12 +64,13 @@ export default function ScheduleList({ navigation }) {
     updateDays();
     sortNewProducts();
     addAllNotifications();
+    updateConferencesList();
   }, [newProducts]);
 
   const filterProducts = () => {
     setNewProducts(
       products.filter(
-        (item) => item.conference === conference && item.room === room
+        (item) => item.conference === myConference && item.room === myRoom
       )
     );
   };
@@ -75,7 +79,7 @@ export default function ScheduleList({ navigation }) {
     try {
       const getDataConference = await AsyncStorage.getItem("savedConference");
       if (getDataConference !== null) {
-        setConference(getDataConference);
+        setMyConference(getDataConference);
       }
     } catch (e) {
       console.log("scheduleList.js getData() reading error ", e);
@@ -83,7 +87,7 @@ export default function ScheduleList({ navigation }) {
     try {
       const getDataRoom = await AsyncStorage.getItem("savedRoom");
       if (getDataRoom !== null) {
-        setRoom(getDataRoom);
+        setMyRoom(getDataRoom);
       }
     } catch (e) {
       console.log("scheduleList.js getData() reading error ", e);
@@ -117,6 +121,18 @@ export default function ScheduleList({ navigation }) {
     // console.log(days);
   };
 
+  const updateConferencesList = () => {
+    let conferencesArray = [];
+    products.map(({ conference }) => {
+      if (!conferencesArray.includes(conference)) {
+        conferencesArray.push(conference);
+      }
+    });
+    // console.log(conferencesArray);
+    // setConferencesList(conferencesArray);
+    globalConferencesContext.changeGlobalConferences(conferencesArray);
+  };
+
   const addAllNotifications = () => {
     console.log("add all notifications");
     Notifications.cancelAllScheduledNotificationsAsync();
@@ -140,19 +156,19 @@ export default function ScheduleList({ navigation }) {
         alert,
       }) => {
         if (day === todayDate) {
-          console.log(todayDate);
+          // console.log(todayDate);
           const currentHour = date.getHours();
           const currentMinute = date.getMinutes();
           if (
             parseInt(startingHour) >= currentHour &&
             parseInt(startingMinute) >= currentMinute
           ) {
-            console.log("STARTing");
+            console.log("STARTIG");
             const notificationSeconds =
               (parseInt(startingHour) - currentHour) * 3600 +
               (parseInt(startingMinute) - currentMinute) * 60;
 
-            notification("Rozpocznij wykład", title, notificationSeconds - 30);
+            notification("Rozpocznij wykład", title, notificationSeconds - 15);
           }
 
           if (
@@ -164,14 +180,14 @@ export default function ScheduleList({ navigation }) {
               (parseInt(endingHour) - currentHour) * 3600 +
               (parseInt(endingMinute) - currentMinute) * 60;
 
-            notification("Zakończ wykład", title, notificationSeconds - 30);
+            notification("Zakończ wykład", title, notificationSeconds - 15);
 
             if (alert > 0 && notificationSeconds - alert * 60 > 0) {
               console.log("ALERT");
               notification(
                 "ALERT",
                 "Alert wykładu " + title,
-                notificationSeconds - alert * 60 - 30
+                notificationSeconds - alert * 60 - 15
               );
             }
           }
