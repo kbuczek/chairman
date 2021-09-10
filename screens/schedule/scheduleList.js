@@ -213,61 +213,94 @@ export default function ScheduleList({ navigation }) {
 
     const itemNewStartingMinute =
       parseInt(item.startingMinute) + parseInt(value);
-    if (itemNewStartingMinute < 60) {
-      item.startingMinute = itemNewStartingMinute;
-    } else {
-      item.startingHour = parseInt(item.startingHour) + 1;
-      item.startingMinute = itemNewStartingMinute - 60;
-    }
-
     const itemNewEndingMinute = parseInt(item.endingMinute) + parseInt(value);
-    if (itemNewEndingMinute < 60) {
-      item.endingMinute = itemNewEndingMinute;
-    } else {
-      item.endingHour = parseInt(item.endingHour) + 1;
-      item.endingMinute = itemNewEndingMinute - 60;
+    const interval =
+      parseInt(item.endingHour) * 60 +
+      parseInt(item.endingMinute) -
+      (parseInt(item.startingHour) * 60 + parseInt(item.startingMinute));
+    let correctInterval = false;
+
+    if (value > 0) {
+      correctInterval = true;
+      if (itemNewEndingMinute < 60) {
+        item.endingMinute = itemNewEndingMinute;
+      } else {
+        item.endingHour = parseInt(item.endingHour) + 1;
+        item.endingMinute = itemNewEndingMinute - 60;
+      }
+    } else if (-value < interval) {
+      correctInterval = true;
+      if (itemNewEndingMinute >= 0) {
+        console.log(itemNewEndingMinute);
+        item.endingMinute = itemNewEndingMinute;
+      } else {
+        item.endingHour = parseInt(item.endingHour) - 1;
+        item.endingMinute = itemNewEndingMinute + 60;
+      }
     }
 
-    FetchWithData(Urls.baseUrl + `/update/${item._id}`, "POST", item).then(
-      () => {
-        FetchNoData(Urls.baseUrl).then((response) => setProducts(response));
-      }
-    );
-
-    newProducts.map((e) => {
-      if (e.day === item.day) {
-        if (
-          e.startingHour > item.startingHour ||
-          (e.startingHour === item.startingHour &&
-            e.startingMinute > item.startingMinute)
-        ) {
-          const eNewStartingMinute =
-            parseInt(e.startingMinute) + parseInt(value);
-          if (eNewStartingMinute < 60) {
-            e.startingMinute = eNewStartingMinute;
-          } else {
-            e.startingHour = parseInt(e.startingHour) + 1;
-            e.startingMinute = eNewStartingMinute - 60;
-          }
-
-          const eNewEndingMinute = parseInt(e.endingMinute) + parseInt(value);
-          if (eNewEndingMinute < 60) {
-            e.endingMinute = eNewEndingMinute;
-          } else {
-            e.endingHour = parseInt(e.endingHour) + 1;
-            e.endingMinute = eNewEndingMinute - 60;
-          }
-
-          FetchWithData(Urls.baseUrl + `/update/${e._id}`, "POST", e).then(
-            () => {
-              FetchNoData(Urls.baseUrl).then((response) =>
-                setProducts(response)
-              );
-            }
-          );
+    if (correctInterval) {
+      FetchWithData(Urls.baseUrl + `/update/${item._id}`, "POST", item).then(
+        () => {
+          FetchNoData(Urls.baseUrl).then((response) => setProducts(response));
         }
-      }
-    });
+      );
+
+      newProducts.map((e) => {
+        if (e.day === item.day) {
+          if (
+            parseInt(e.startingHour) > parseInt(item.startingHour) ||
+            (parseInt(e.startingHour) === parseInt(item.startingHour) &&
+              parseInt(e.startingMinute) > parseInt(item.startingMinute))
+          ) {
+            console.log(e.title, e.startingHour, ">", item.startingHour);
+            const eNewStartingMinute =
+              parseInt(e.startingMinute) + parseInt(value);
+            const eNewEndingMinute = parseInt(e.endingMinute) + parseInt(value);
+
+            if (value > 0) {
+              //początek wykładu
+              if (eNewStartingMinute < 60) {
+                e.startingMinute = eNewStartingMinute;
+              } else {
+                e.startingHour = parseInt(e.startingHour) + 1;
+                e.startingMinute = eNewStartingMinute - 60;
+              }
+
+              //koniec wykładu
+              if (eNewEndingMinute < 60) {
+                e.endingMinute = eNewEndingMinute;
+              } else {
+                e.endingHour = parseInt(e.endingHour) + 1;
+                e.endingMinute = eNewEndingMinute - 60;
+              }
+            } else if (value < 0) {
+              if (eNewStartingMinute >= 0) {
+                e.startingMinute = eNewStartingMinute;
+              } else {
+                e.startingHour = parseInt(e.startingHour) - 1;
+                e.startingMinute = eNewStartingMinute + 60;
+              }
+
+              if (eNewEndingMinute >= 0) {
+                e.endingMinute = eNewEndingMinute;
+              } else {
+                e.endingHour = parseInt(e.endingHour) - 1;
+                e.endingMinute = eNewEndingMinute + 60;
+              }
+            }
+
+            FetchWithData(Urls.baseUrl + `/update/${e._id}`, "POST", e).then(
+              () => {
+                FetchNoData(Urls.baseUrl).then((response) =>
+                  setProducts(response)
+                );
+              }
+            );
+          }
+        }
+      });
+    }
   };
 
   const pressHandlerChangeWithLecture = (

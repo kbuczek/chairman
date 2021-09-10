@@ -81,6 +81,7 @@ export default function ScheduleListChangeWithItemForm({
                   onChangeText={props.handleChange("day")}
                   value={props.values.day}
                   onBlur={props.handleBlur("day")}
+                  keyboardType={"phone-pad"}
                 />
                 <Text style={globalStyles.errorText}>
                   {props.touched.day && props.errors.day}
@@ -93,6 +94,7 @@ export default function ScheduleListChangeWithItemForm({
                   onChangeText={props.handleChange("startingHour")}
                   value={props.values.startingHour}
                   onBlur={props.handleBlur("startingHour")}
+                  keyboardType={"phone-pad"}
                 />
                 <Text style={globalStyles.errorText}>
                   {props.touched.startingHour && props.errors.startingHour}
@@ -105,6 +107,7 @@ export default function ScheduleListChangeWithItemForm({
                   onChangeText={props.handleChange("startingMinute")}
                   value={props.values.startingMinute}
                   onBlur={props.handleBlur("startingMinute")}
+                  keyboardType={"phone-pad"}
                 />
                 <Text style={globalStyles.errorText}>
                   {props.touched.startingMinute && props.errors.startingMinute}

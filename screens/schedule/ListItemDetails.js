@@ -82,7 +82,7 @@ export default function ListItemDetails({ route, navigation }) {
                   route.params.pressHandlerExtendLecture
                 }
                 item={route.params.item}
-                bigTitle={"Przedłuż wykład"}
+                bigTitle={"Przedłuż/skróć wykład"}
               />
             </View>
           </TouchableWithoutFeedback>
@@ -182,7 +182,7 @@ export default function ListItemDetails({ route, navigation }) {
           onPress={() => setIsModalOpenEdit(true)}
         />
         <EditButton
-          text="Przedłuż wykład"
+          text="Przedłuż/skróć wykład"
           icon="more-time"
           onPress={() => {
             setIsModalOpenExtendLecture(true);

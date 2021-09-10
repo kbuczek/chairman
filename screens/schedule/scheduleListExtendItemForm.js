@@ -18,10 +18,10 @@ const scheduleSchema = yup.object({
     .number()
     .integer()
     .test(
-      "is-num-1-30",
-      "Godzina musi mieścić się w przedziale od 1 do 30",
+      "is-num--60-60",
+      "Godzina musi mieścić się w przedziale od -60 do 60",
       (val) => {
-        return val > 0 && val <= 30;
+        return val >= -60 && val <= 60;
       }
     )
     .nullable(true),
@@ -50,9 +50,10 @@ export default function ScheduleListExtendItemForm({
           >
             {(props) => (
               <View>
-                <Text>
-                  Wpisz o ile minut chcesz przedłużyć wybrany wykład i przesunąć
-                  WSZYSTKIE następujące po nim wykłady o daną ilość minut tego
+                <Text style={{ marginBottom: 15 }}>
+                  Wpisz o ile minut chcesz przedłużyć (lub skrócić - należy
+                  wtedy umieścić liczbę ujemną) wybrany wykład i przesunąć
+                  WSZYSTKIE następujące po nim wykłady o podaną ilość minut tego
                   samego dnia.
                 </Text>
                 <TextInput
@@ -62,10 +63,12 @@ export default function ScheduleListExtendItemForm({
                   onChangeText={props.handleChange("alarm")}
                   value={props.values.alarm}
                   onBlur={props.handleBlur("alarm")}
+                  keyboardType={"phone-pad"}
                 />
                 <Text style={globalStyles.errorText}>
                   {props.touched.alarm && props.errors.alarm}
                 </Text>
+
                 <CustomButton
                   text={bigTitle}
                   icon="add"

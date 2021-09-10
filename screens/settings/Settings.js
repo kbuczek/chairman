@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   StyleSheet,
   TextInput,
@@ -15,7 +15,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import CustomButton from "../../shared/customButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
-// import AppContext from "../../shared/AppContext";
+import AppContext from "../../shared/AppContext";
 
 const settingsSchema = yup.object({
   savedConference: yup.string().required().max(40),
@@ -49,7 +49,7 @@ export default function Settings() {
   const [room, setRoom] = useState("");
   const [timeBefore, setTimeBefore] = useState("");
   const [timeAfter, setTimeAfter] = useState("");
-  // const globalConferencesContext = useContext(AppContext);
+  const globalConferencesContext = useContext(AppContext);
 
   useEffect(() => {
     getData();
@@ -143,15 +143,15 @@ export default function Settings() {
                     selectedValue={props.values.savedConference}
                     onValueChange={props.handleChange("savedConference")}
                   >
-                    <Picker.Item
+                    {/* <Picker.Item
                       label="konferencja-fizyka-2021"
                       value="konferencja-fizyka-2021"
                     />
                     <Picker.Item label="fizyka2021" value="fizyka2021" />
-                    <Picker.Item label="geografia-uj" value="geografia-uj" />
-                    {/* {globalConferencesContext.array.map((item) => {
-                      return <Picker.Item label={item} value={item} />;
-                    })} */}
+                    <Picker.Item label="geografia-uj" value="geografia-uj" /> */}
+                    {globalConferencesContext.array.map((item, id) => {
+                      return <Picker.Item label={item} value={item} key={id} />;
+                    })}
                   </Picker>
                 </View>
                 {/* <TextInput
