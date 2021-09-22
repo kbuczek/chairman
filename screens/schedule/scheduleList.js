@@ -41,13 +41,12 @@ export default function ScheduleList({ navigation }) {
   const [conferencesList, setConferencesList] = useState([]);
   const globalConferencesContext = useContext(AppContext);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       getData();
       FetchNoData(Urls.baseUrl).then((response) => setProducts(response));
     });
 
-    // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
   }, [navigation]);
 
@@ -206,9 +205,6 @@ export default function ScheduleList({ navigation }) {
   };
 
   const pressHandlerExtendLecture = (value, item) => {
-    console.log("EXTEND THIS", value);
-    console.log("item id", item);
-    // item.
     navigation.goBack();
 
     const itemNewStartingMinute =
@@ -220,23 +216,50 @@ export default function ScheduleList({ navigation }) {
       (parseInt(item.startingHour) * 60 + parseInt(item.startingMinute));
     let correctInterval = false;
 
+    const forwardScheduleTime = (
+      thisMinute,
+      thisHour,
+      itemNewMinute,
+      myObject
+    ) => {
+      if (itemNewMinute < 60) {
+        myObject[thisMinute] = itemNewMinute;
+      } else {
+        myObject[thisHour] = parseInt(myObject[thisHour]) + 1;
+        myObject[thisMinute] = itemNewMinute - 60;
+      }
+    };
+
+    const backwardScheduleTime = (
+      thisMinute,
+      thisHour,
+      itemNewMinute,
+      myObject
+    ) => {
+      if (itemNewMinute >= 0) {
+        myObject[thisMinute] = itemNewMinute;
+      } else {
+        myObject[thisHour] = parseInt(myObject[thisHour]) - 1;
+        myObject[thisMinute] = itemNewMinute + 60;
+      }
+    };
+
     if (value > 0) {
       correctInterval = true;
-      if (itemNewEndingMinute < 60) {
-        item.endingMinute = itemNewEndingMinute;
-      } else {
-        item.endingHour = parseInt(item.endingHour) + 1;
-        item.endingMinute = itemNewEndingMinute - 60;
-      }
+      forwardScheduleTime(
+        "endingMinute",
+        "endingHour",
+        itemNewEndingMinute,
+        item
+      );
     } else if (-value < interval) {
       correctInterval = true;
-      if (itemNewEndingMinute >= 0) {
-        console.log(itemNewEndingMinute);
-        item.endingMinute = itemNewEndingMinute;
-      } else {
-        item.endingHour = parseInt(item.endingHour) - 1;
-        item.endingMinute = itemNewEndingMinute + 60;
-      }
+      backwardScheduleTime(
+        "endingMinute",
+        "endingHour",
+        itemNewEndingMinute,
+        item
+      );
     }
 
     if (correctInterval) {
@@ -253,41 +276,38 @@ export default function ScheduleList({ navigation }) {
             (parseInt(e.startingHour) === parseInt(item.startingHour) &&
               parseInt(e.startingMinute) > parseInt(item.startingMinute))
           ) {
-            console.log(e.title, e.startingHour, ">", item.startingHour);
             const eNewStartingMinute =
               parseInt(e.startingMinute) + parseInt(value);
             const eNewEndingMinute = parseInt(e.endingMinute) + parseInt(value);
 
             if (value > 0) {
-              //początek wykładu
-              if (eNewStartingMinute < 60) {
-                e.startingMinute = eNewStartingMinute;
-              } else {
-                e.startingHour = parseInt(e.startingHour) + 1;
-                e.startingMinute = eNewStartingMinute - 60;
-              }
+              forwardScheduleTime(
+                "startingMinute",
+                "startingHour",
+                eNewStartingMinute,
+                e
+              );
 
-              //koniec wykładu
-              if (eNewEndingMinute < 60) {
-                e.endingMinute = eNewEndingMinute;
-              } else {
-                e.endingHour = parseInt(e.endingHour) + 1;
-                e.endingMinute = eNewEndingMinute - 60;
-              }
+              forwardScheduleTime(
+                "endingMinute",
+                "endingHour",
+                eNewEndingMinute,
+                e
+              );
             } else if (value < 0) {
-              if (eNewStartingMinute >= 0) {
-                e.startingMinute = eNewStartingMinute;
-              } else {
-                e.startingHour = parseInt(e.startingHour) - 1;
-                e.startingMinute = eNewStartingMinute + 60;
-              }
+              backwardScheduleTime(
+                "startingMinute",
+                "startingHour",
+                eNewStartingMinute,
+                e
+              );
 
-              if (eNewEndingMinute >= 0) {
-                e.endingMinute = eNewEndingMinute;
-              } else {
-                e.endingHour = parseInt(e.endingHour) - 1;
-                e.endingMinute = eNewEndingMinute + 60;
-              }
+              backwardScheduleTime(
+                "endingMinute",
+                "endingHour",
+                eNewEndingMinute,
+                e
+              );
             }
 
             FetchWithData(Urls.baseUrl + `/update/${e._id}`, "POST", e).then(
@@ -416,7 +436,8 @@ export default function ScheduleList({ navigation }) {
                   1. Przejdź do zakładki "Ustawienia".
                 </Text>
                 <Text style={styles.message}>
-                  2. Dodaj nazwę twojej KONFERENCJI oraz nazwę twojej SALI.
+                  2. Wybierz z listy nazwę twojej KONFERENCJI oraz nazwę twojej
+                  SALI.
                 </Text>
                 <Text style={styles.message}>
                   3. Po wykonaniu punktów 1. i 2. możesz tutaj dodawać twoje

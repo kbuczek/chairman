@@ -31,6 +31,5 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     fontSize: 16,
     marginRight: 5,
-    // textAlign: "center",
   },
 });

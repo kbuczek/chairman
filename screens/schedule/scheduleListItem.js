@@ -17,7 +17,6 @@ export default function ScheduleListItem({ item, pressHandler }) {
             {DisplayFrontZeros(item.endingMinute)}
           </Text>
           <Text style={styles.itemText}>{item.title}</Text>
-          {/* <MaterialIcons name="delete" size={18} color="#333" /> */}
         </View>
         <View style={styles.timer}>
           <CurrentTimer
@@ -44,10 +43,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     borderColor: "#dbdbdb",
     fontWeight: "800",
-    // borderWidth: 1,
-    // borderStyle: "dashed",
     borderRadius: 30,
-    // flexDirection: "row",
     backgroundColor: "#f2f6fc",
     elevation: 2,
     shadowOffset: { width: 1, height: 1 },
