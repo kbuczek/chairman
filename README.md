@@ -7,3 +7,5 @@ Check out the code here: https://github.com/kbuczek/chairman-frontend
 
 Chairman backend stores all conferences and lectures in MongoDB Atlas. Used Node.js as simple API for the React Native App and React frontend Webpage
 Check out the code here: https://github.com/kbuczek/chairman-backend
+
+UPDATE: The mongoDB Atlas database is no longer active
